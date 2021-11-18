@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ public class SBNode
     
     private Vector3 force;
     private Vector3 speed;
+    
+    private float t = 0.0f;
 
     private bool isFixed = false;
     
@@ -22,12 +25,25 @@ public class SBNode
     }
 
     public void Tick(float deltaTime) {
+       /*
         if (isFixed) {
             speed = Vector3.zero;
         } else {
             speed += deltaTime * force / mass; 
             position += deltaTime * speed;
         }
+        */
+       t += deltaTime;
+
+       if (isFixed) {
+            
+       } else
+       {
+           float phi = -(float)Math.Atan2(Math.Sqrt(mass), position.y);
+           float c = (float) Math.Sqrt(position.y * position.y + mass);
+
+           position.y = c * (float)Math.Cos(Math.Sqrt(1 / mass) * t + phi);
+       }
     }
 
     public void AddForce(Vector3 force)
