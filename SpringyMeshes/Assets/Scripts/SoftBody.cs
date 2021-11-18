@@ -24,14 +24,14 @@ public class SoftBody : MonoBehaviour
 
         particles = new List<SBNode>
         {
-            new SBNode(new Vector3(0, 0, 0), 10.0f),
-            new SBNode(new Vector3(1, 0, 0), 10.0f),
-            new SBNode(new Vector3(1, 1, 0), 10.0f),
-            new SBNode(new Vector3(0, 1, 0), 10.0f),
-            new SBNode(new Vector3(0, 1, 1), 10.0f),
-            new SBNode(new Vector3(1, 1, 1), 10.0f),
-            new SBNode(new Vector3(1, 0, 1), 10.0f),
-            new SBNode(new Vector3(0, 0, 1), 10.0f),
+            new SBNode(new Vector3(0, 0, 0), 1.0f),
+            new SBNode(new Vector3(1, 0, 0), 1.0f),
+            new SBNode(new Vector3(1, 1, 0), 1.0f),
+            new SBNode(new Vector3(0, 1, 0), 1.0f),
+            new SBNode(new Vector3(0, 1, 1), 1.0f),
+            new SBNode(new Vector3(1, 1, 1), 1.0f),
+            new SBNode(new Vector3(1, 0, 1), 1.0f),
+            new SBNode(new Vector3(0, 0, 1), 1.0f),
         };
 
         particles[2].IsFixed = true;
@@ -103,7 +103,7 @@ public class SoftBody : MonoBehaviour
             {
                 for (int i = 0; i < particles.Count; i++)
                 {
-                    Gizmos.DrawSphere(transform.TransformPoint(particles[i].Position), 0.1f);
+                    Gizmos.DrawSphere(transform.TransformPoint(particles[i].Position), 0.05f);
                 }
             }
         }
