@@ -25,30 +25,30 @@ public class SBNode
     }
 
     public void Tick(float deltaTime) {
-       /*
+       
         if (isFixed) {
             speed = Vector3.zero;
         } else {
             speed += deltaTime * force / mass; 
             position += deltaTime * speed;
         }
-        */
+        
        
        // spring-mass-damper
-       t += deltaTime;
-       float v = 10;
-       float omega = (float)(2.0 * Math.PI);
-       float k = 4 * (float)(Math.PI * Math.PI);
-       float d = 0.1f * (float) (Math.PI);
-       float Pn = 2.0f * (float) ((Math.PI) * Math.Sqrt(mass / k));
-       float c = (float) Math.Sqrt(position.y * position.y + v * mass / k);
-       float vrtulka = d / (2.0f * (float) (Math.Sqrt(k * mass)));
-       float phi = -(float)Math.Atan2(Math.Sqrt(mass) * v, position.y * Math.Sqrt(k));
-       if (!isFixed)
-       {
-           position.y = c * (float) Math.Exp(-vrtulka * omega * t) *
-                        (float) (Math.Cos(omega * Math.Sqrt(1.0 - vrtulka * vrtulka) * t + phi));
-       }
+       // t += deltaTime;
+       // float v = 10;
+       // float omega = (float)(2.0 * Math.PI);
+       // float k = 4 * (float)(Math.PI * Math.PI);
+       // float d = 0.1f * (float) (Math.PI);
+       // float Pn = 2.0f * (float) ((Math.PI) * Math.Sqrt(mass / k));
+       // float c = (float) Math.Sqrt(position.y * position.y + v * mass / k);
+       // float vrtulka = d / (2.0f * (float) (Math.Sqrt(k * mass)));
+       // float phi = -(float)Math.Atan2(Math.Sqrt(mass) * v, position.y * Math.Sqrt(k));
+       // if (!isFixed)
+       // {
+       //     position.y = c * (float) Math.Exp(-vrtulka * omega * t) *
+       //                  (float) (Math.Cos(omega * Math.Sqrt(1.0 - vrtulka * vrtulka) * t + phi));
+       // }
 
        // damperless
        // float v = 1;

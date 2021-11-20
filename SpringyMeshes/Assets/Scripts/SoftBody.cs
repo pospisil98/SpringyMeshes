@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class SoftBody : MonoBehaviour
 {
     public bool drawGizmos = false;
+    public Material mat;
 
     private MeshRenderer meshRenderer;
     private MeshFilter meshFilter;
@@ -17,7 +19,7 @@ public class SoftBody : MonoBehaviour
     private void OnEnable()
     {
         meshRenderer = gameObject.AddComponent<MeshRenderer>();
-        meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
+        meshRenderer.sharedMaterial = mat;
 
         meshFilter = gameObject.AddComponent<MeshFilter>();
         mesh = meshFilter.mesh;
@@ -63,9 +65,10 @@ public class SoftBody : MonoBehaviour
 
     private void Update()
     {
+        // add gravity
         for (int i = 0; i < particles.Count; i++)
         {
-            particles[i].AddForce(new Vector3(0, -0.1f, 0));
+            particles[i].AddForce(Physics.gravity * particles[i].Mass * Time.deltaTime);
         }
 
         for (int i = 0; i < particles.Count; i++)
