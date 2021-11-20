@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
+using Random = System.Random;
 
 public class SoftBody : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class SoftBody : MonoBehaviour
     private Mesh mesh;
 
     private List<SBNode> particles;
+    private List<SBSDampedSpring> dampedSprings;
     private List<int> triangles;
 
     private void OnEnable()
@@ -41,6 +43,28 @@ public class SoftBody : MonoBehaviour
         particles[4].IsFixed = true;
         particles[5].IsFixed = true;
 
+        dampedSprings = new List<SBSDampedSpring>
+        {
+            // vertical
+            new SBSDampedSpring(particles[1], particles[2]),
+            new SBSDampedSpring(particles[3], particles[0]),
+            new SBSDampedSpring(particles[5], particles[6]),
+            new SBSDampedSpring(particles[4], particles[7]),
+            
+            // horizontal bottom
+            new SBSDampedSpring(particles[0], particles[1]),
+             new SBSDampedSpring(particles[1], particles[6]),
+            new SBSDampedSpring(particles[6], particles[7]),
+             new SBSDampedSpring(particles[0], particles[7]),
+            
+            // horizontal top
+            //new SBSDampedSpring(particles[2], particles[3]),
+            // new SBSDampedSpring(particles[2], particles[5]),
+            // new SBSDampedSpring(particles[3], particles[4]),
+            //new SBSDampedSpring(particles[4], particles[5]),
+            
+        };
+
         triangles = new List<int>
         {
             0, 2, 1, //face front
@@ -65,12 +89,41 @@ public class SoftBody : MonoBehaviour
 
     private void Update()
     {
-        // add gravity
+        // Loop over all of the particles, setting each particle’s force to the accumulation
+        // of all external forces acting directly on each particle, such as air drag, friction,
+        // or gravity
+        // gravity
         for (int i = 0; i < particles.Count; i++)
         {
-            particles[i].AddForce(Physics.gravity * particles[i].Mass * Time.deltaTime);
+            particles[i].AddForce(Physics.gravity * particles[i].Mass);
         }
 
+        float d = 1.0f;
+        // air drag
+        for (int i = 0; i < particles.Count; i++)
+        {
+            particles[i].AddForce(- d  * particles[i].Velocity);
+        }
+
+        // wind
+        float u = UnityEngine.Random.value;
+        float v = UnityEngine.Random.value;
+        for (int i = 0; i < particles.Count; i++)
+        {
+            particles[i].AddForce(d * (u * Vector3.right + v * Vector3.forward) * 4.0f);
+        }
+
+        
+        // Loop over all of the struts, adding each strut’s spring and damper forces to
+        // the forces acting on the two particles it is connected to
+        for (int i = 0; i < dampedSprings.Count; i++)
+        {
+            dampedSprings[i].Tick();
+        }
+
+        
+        // Loop over all of the particles, dividing the particle’s total applied force by its
+        // mass to obtain its acceleration
         for (int i = 0; i < particles.Count; i++)
         {
             particles[i].Tick(Time.deltaTime);
