@@ -34,7 +34,7 @@ public class SBSDampedSpring
         restLength = Vector3.Distance(start.Position, end.Position);
     }
 
-    public void Tick()
+    public void ApplyForces()
     {
         float length = Vector3.Distance(start.Position, end.Position);
 

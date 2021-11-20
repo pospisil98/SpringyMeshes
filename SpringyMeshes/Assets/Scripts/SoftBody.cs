@@ -28,13 +28,13 @@ public class SoftBody : MonoBehaviour
 
         particles = new List<SBNode>
         {
-            new SBNode(new Vector3(0, 0, 0), 1.0f),
+            new SBNode(new Vector3(0, 0, 0), 4.0f),
             new SBNode(new Vector3(1, 0, 0), 1.0f),
             new SBNode(new Vector3(1, 1, 0), 1.0f),
             new SBNode(new Vector3(0, 1, 0), 1.0f),
             new SBNode(new Vector3(0, 1, 1), 1.0f),
             new SBNode(new Vector3(1, 1, 1), 1.0f),
-            new SBNode(new Vector3(1, 0, 1), 1.0f),
+            new SBNode(new Vector3(1, 0, 1), 2.0f),
             new SBNode(new Vector3(0, 0, 1), 1.0f),
         };
 
@@ -51,17 +51,37 @@ public class SoftBody : MonoBehaviour
             new SBSDampedSpring(particles[5], particles[6]),
             new SBSDampedSpring(particles[4], particles[7]),
             
+            // vertical diagonal
+            new SBSDampedSpring(particles[0], particles[2]),
+            new SBSDampedSpring(particles[1], particles[3]),
+            new SBSDampedSpring(particles[1], particles[5]),
+            new SBSDampedSpring(particles[2], particles[6]),
+            new SBSDampedSpring(particles[4], particles[6]),
+            new SBSDampedSpring(particles[5], particles[7]),
+            new SBSDampedSpring(particles[0], particles[4]),
+            new SBSDampedSpring(particles[3], particles[7]),
+            
+            
+
             // horizontal bottom
             new SBSDampedSpring(particles[0], particles[1]),
              new SBSDampedSpring(particles[1], particles[6]),
             new SBSDampedSpring(particles[6], particles[7]),
              new SBSDampedSpring(particles[0], particles[7]),
+             
+             // horizontal bottom diagonal
+             // new SBSDampedSpring(particles[0], particles[6]),
+             // new SBSDampedSpring(particles[1], particles[7]),
             
             // horizontal top
             //new SBSDampedSpring(particles[2], particles[3]),
             // new SBSDampedSpring(particles[2], particles[5]),
             // new SBSDampedSpring(particles[3], particles[4]),
             //new SBSDampedSpring(particles[4], particles[5]),
+            
+            // horizontal top diagonal
+            // new SBSDampedSpring(particles[2], particles[4]),
+            // new SBSDampedSpring(particles[3], particles[6]),
             
         };
 
@@ -118,7 +138,7 @@ public class SoftBody : MonoBehaviour
         // the forces acting on the two particles it is connected to
         for (int i = 0; i < dampedSprings.Count; i++)
         {
-            dampedSprings[i].Tick();
+            dampedSprings[i].ApplyForces();
         }
 
         
