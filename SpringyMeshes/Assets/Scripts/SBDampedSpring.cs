@@ -8,11 +8,11 @@ public class SBSDampedSpring
 
     /// <summary> Strength constant </summary>
     private float k = 4.0f * (float)(Math.PI * Math.PI);
-    // private float k = 0.5f;
+     // private float k = 1.0f;
         
     /// <summary> Damping constant </summary>
     private float d  = 0.8f * (float)Math.PI;
-    // private float d  = 0.0f;
+     // private float d  = 0.0f;
     
     private SBNode start;
     private SBNode end;
