@@ -39,9 +39,9 @@ public class SoftBody : MonoBehaviour
         };
         //
         // particles[2].IsFixed = true;
-        particles[3].IsFixed = true;
+        // particles[3].IsFixed = true;
         // particles[4].IsFixed = true;
-        particles[5].IsFixed = true;
+        // particles[5].IsFixed = true;
 
         dampedSprings = new List<SBSDampedSpring>
         {
@@ -84,10 +84,10 @@ public class SoftBody : MonoBehaviour
             new SBSDampedSpring(particles[3], particles[5]),
             
             
-            new SBSDampedSpring(particles[0], particles[5]),
-            new SBSDampedSpring(particles[1], particles[4]),
-            new SBSDampedSpring(particles[3], particles[6]),
-            new SBSDampedSpring(particles[2], particles[7]),
+            // new SBSDampedSpring(particles[0], particles[5]),
+            // new SBSDampedSpring(particles[1], particles[4]),
+            // new SBSDampedSpring(particles[3], particles[6]),
+            // new SBSDampedSpring(particles[2], particles[7]),
             
             
         };
@@ -122,7 +122,7 @@ public class SoftBody : MonoBehaviour
         // gravity
         for (int i = 0; i < particles.Count; i++)
         {
-            particles[i].AddForce(Physics.gravity * particles[i].Mass );
+            particles[i].AddForce(transform.InverseTransformVector(Physics.gravity * particles[i].Mass));
         }
 
         float d = 1.0f;
@@ -133,12 +133,12 @@ public class SoftBody : MonoBehaviour
         }
 
         // wind
-        float u = UnityEngine.Random.value;
-        float v = UnityEngine.Random.value;
-        for (int i = 0; i < particles.Count; i++)
-        {
-            particles[i].AddForce(d * (u * Vector3.right + v * Vector3.forward) * 4.0f);
-        }
+        // float u = UnityEngine.Random.value;
+        // float v = UnityEngine.Random.value;
+        // for (int i = 0; i < particles.Count; i++)
+        // {
+        //     particles[i].AddForce(d * (u * Vector3.right + v * Vector3.forward) * 4.0f);
+        // }
 
         
         // Loop over all of the struts, adding each strut’s spring and damper forces to
@@ -153,7 +153,7 @@ public class SoftBody : MonoBehaviour
         // mass to obtain its acceleration
         for (int i = 0; i < particles.Count; i++)
         {
-            particles[i].Tick(Time.fixedDeltaTime);
+            particles[i].Tick(Time.fixedDeltaTime, transform);
         }
 
         RenderCube();

@@ -141,7 +141,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!64 &26964199
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -214,7 +214,7 @@ Transform:
   m_GameObject: {fileID: 26964198}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 1, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -530,7 +530,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1447374099}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0.03, y: 1.38, z: -0.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -544,8 +544,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4745278291715835813, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
+      propertyPath: velocity.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745278291715835813, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
+      propertyPath: velocity.z
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745278291715835813, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
       propertyPath: windVelocity.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745278291715835813, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
+      propertyPath: initialVelocity.z
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 4745278291715835814, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
       propertyPath: m_RootOrder
@@ -603,6 +615,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4745278291715835816, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4736c33de281dde4e8d165d74cd8605c, type: 2}
     - target: {fileID: 4745278291715835818, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
       propertyPath: m_Name
       value: BouncingSphere

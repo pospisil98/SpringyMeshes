@@ -5,71 +5,75 @@ using UnityEngine;
 
 public class SBNode
 {
+    private const float eps = 0.01f;
     private float mass;
-    private Vector3 position;
-    
-    private Vector3 force;
-    private Vector3 velocity;
-    
-    private float t = 0.0f;
+    private State state;
+    private Plane plane;
+
+    private float c_r = 1.0f;
+    private float c_f = 0.0f;
 
     private bool isFixed = false;
     
     private List<SBSDampedSpring> springs = new List<SBSDampedSpring>();
 
-    public SBNode(Vector3 position, float mass) {
-        this.position = position;
+    public SBNode(Vector3 position, float mass)
+    {
+        state = new State(Vector3.zero, position, Vector3.zero);
         this.mass = mass;
-        this.force = Vector3.zero;
-        this.velocity = Vector3.zero;
+        plane = new Plane(Vector3.zero, Vector3.up);
     }
 
-    public void Tick(float deltaTime) {
-       
-        if (isFixed) {
-            velocity = Vector3.zero;
-        } else
+    public void Tick(float deltaTime, Transform transform) {
+
+        if (isFixed)
         {
-            Vector3 velocity0 = velocity;
-            velocity += deltaTime * force / mass; 
-            position += deltaTime * 0.5f * (velocity + velocity0);
+            state.velocity = Vector3.zero;
+            state.force = Vector3.zero;
+            return;
         }
 
-        force = Vector3.zero;
+        // Determine accelerations by Newton’s second law
+        Vector3 acceleration = state.force / mass;
+        state.force = Vector3.zero;
+        
+        // new-state = Integration of accelerations over timestep delta
+        State newState = new State(state.velocity, state.position);
+        newState.Integrate(acceleration, deltaTime);
 
 
-        // spring-mass-damper
-        // t += deltaTime;
-        // float v = 10;
-        // float omega = (float)(2.0 * Math.PI);
-        // float k = 4 * (float)(Math.PI * Math.PI);
-        // float d = 0.1f * (float) (Math.PI);
-        // float Pn = 2.0f * (float) ((Math.PI) * Math.Sqrt(mass / k));
-        // float c = (float) Math.Sqrt(position.y * position.y + v * mass / k);
-        // float vrtulka = d / (2.0f * (float) (Math.Sqrt(k * mass)));
-        // float phi = -(float)Math.Atan2(Math.Sqrt(mass) * v, position.y * Math.Sqrt(k));
-        // if (!isFixed)
-        // {
-        //     position.y = c * (float) Math.Exp(-vrtulka * omega * t) *
-        //                  (float) (Math.Cos(omega * Math.Sqrt(1.0 - vrtulka * vrtulka) * t + phi));
-        // }
+        // collision detection with plane
+        float distance = plane.pointDist(transform.TransformPoint(state.position));
+        float newDistance = plane.pointDist(transform.TransformPoint(newState.position));
 
-        // damperless
-        // float v = 1;
-        // float k = 4 * (float)(Math.PI * Math.PI);
-        //
-        // if (!isFixed) {
-        // {
-        //     float phi = -(float)Math.Atan2(Math.Sqrt(mass) * v, position.y * Math.Sqrt(k));
-        //     float c = (float) Math.Sqrt(position.y * position.y + v * mass / k);
-        //
-        //     position.y = c * (float)Math.Cos(Math.Sqrt(k / mass) * t + phi);
-        // }
+        if (newDistance < 0.0f)
+        {
+            // calculate first collision and reintegrate
+            float f = distance / (distance - newDistance);
+            float deltaTimeCollision = deltaTime * f;
+            newState = new State(state.velocity, state.position);
+            newState.Integrate(acceleration, deltaTimeCollision);
+
+            // collision response
+            Vector3 v_n_minus = Vector3.Dot(newState.velocity, plane.normal) * plane.normal;
+            Vector3 v_t_minus = newState.velocity - v_n_minus;
+
+            Vector3 v_n_plus = -c_r * Vector3.Dot(newState.velocity, plane.normal) * plane.normal;
+            Vector3 v_t_plus = (1.0f - c_f) * v_t_minus;
+
+            newState.velocity = v_n_plus + v_t_plus;
+            newState.Integrate(Vector3.zero, deltaTime - deltaTimeCollision);
+        }
+        
+        // current-state = new-state
+        state = newState;
+        
+
     }
 
     public void AddForce(Vector3 force)
     {
-        this.force += force;
+        state.force += force;
     }
 
     public float Mass
@@ -80,20 +84,20 @@ public class SBNode
 
     public Vector3 Position
     {
-        get => position;
-        set => position = value;
+        get => state.position;
+        set => state.position = value;
     }
 
     public Vector3 Force
     {
-        get => force;
-        set => force = value;
+        get => state.force;
+        set => state.force = value;
     }
 
     public Vector3 Velocity
     {
-        get => velocity;
-        set => velocity = value;
+        get => state.velocity;
+        set => state.velocity = value;
     }
 
     public bool IsFixed
