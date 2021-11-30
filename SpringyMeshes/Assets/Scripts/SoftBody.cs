@@ -10,6 +10,8 @@ public class SoftBody : MonoBehaviour
     public bool drawGizmos = false;
     public Material mat;
 
+    public Box box;
+
     private MeshRenderer meshRenderer;
     private MeshFilter meshFilter;
     private Mesh mesh;
@@ -84,10 +86,10 @@ public class SoftBody : MonoBehaviour
             new SBSDampedSpring(particles[3], particles[5]),
             
             
-            // new SBSDampedSpring(particles[0], particles[5]),
-            // new SBSDampedSpring(particles[1], particles[4]),
-            // new SBSDampedSpring(particles[3], particles[6]),
-            // new SBSDampedSpring(particles[2], particles[7]),
+            new SBSDampedSpring(particles[0], particles[5]),
+            new SBSDampedSpring(particles[1], particles[4]),
+            new SBSDampedSpring(particles[3], particles[6]),
+            new SBSDampedSpring(particles[2], particles[7]),
             
             
         };
@@ -110,6 +112,11 @@ public class SoftBody : MonoBehaviour
     }
 
     void Start()
+    {
+        RenderCube();
+    }
+
+    private void Update()
     {
         RenderCube();
     }
@@ -153,10 +160,9 @@ public class SoftBody : MonoBehaviour
         // mass to obtain its acceleration
         for (int i = 0; i < particles.Count; i++)
         {
-            particles[i].Tick(Time.fixedDeltaTime, transform);
+            particles[i].Tick(Time.fixedDeltaTime, transform, box);
         }
 
-        RenderCube();
     }
 
     private void RenderCube()

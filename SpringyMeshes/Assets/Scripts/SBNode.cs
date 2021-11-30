@@ -24,7 +24,7 @@ public class SBNode
         plane = new Plane(Vector3.zero, Vector3.up);
     }
 
-    public void Tick(float deltaTime, Transform transform) {
+    public void Tick(float deltaTime, Transform transform, Box box) {
 
         if (isFixed)
         {
@@ -41,11 +41,43 @@ public class SBNode
         State newState = new State(state.velocity, state.position);
         newState.Integrate(acceleration, deltaTime);
 
+        
+        // collision detection with triangles
+        // for (int i = 0; i < box.triangles.Count; i++)
+        // {
+        //     if (box.triangles[i].intersectLineSegment(transform.TransformPoint(state.position), transform.TransformPoint(newState.position)))
+        //     {
+        //         float distance = box.triangles[i].pointDist(transform.TransformPoint(state.position));
+        //         float newDistance = box.triangles[i].pointDist(transform.TransformPoint(newState.position));
+        //
+        //         if (newDistance < 0.0f)
+        //         {
+        //             // calculate first collision and reintegrate
+        //             float f = distance / (distance - newDistance);
+        //             float deltaTimeCollision = deltaTime * f;
+        //             newState = new State(state.velocity, state.position);
+        //             newState.Integrate(acceleration, deltaTimeCollision);
+        //
+        //             // collision response
+        //             Vector3 v_n_minus = Vector3.Dot(newState.velocity, box.triangles[i].normal) * box.triangles[i].normal;
+        //             Vector3 v_t_minus = newState.velocity - v_n_minus;
+        //
+        //             Vector3 v_n_plus = -c_r * Vector3.Dot(newState.velocity, box.triangles[i].normal) * box.triangles[i].normal;
+        //             Vector3 v_t_plus = (1.0f - c_f) * v_t_minus;
+        //
+        //             newState.velocity = v_n_plus + v_t_plus;
+        //             newState.velocity *= 0.01f;
+        //             newState.Integrate(Vector3.zero, deltaTime - deltaTimeCollision);
+        //         }
+        //         break;
+        //     }
+        // }
 
-        // collision detection with plane
+
+        // // collision detection with plane
         float distance = plane.pointDist(transform.TransformPoint(state.position));
         float newDistance = plane.pointDist(transform.TransformPoint(newState.position));
-
+        
         if (newDistance < 0.0f)
         {
             // calculate first collision and reintegrate
@@ -53,14 +85,14 @@ public class SBNode
             float deltaTimeCollision = deltaTime * f;
             newState = new State(state.velocity, state.position);
             newState.Integrate(acceleration, deltaTimeCollision);
-
+        
             // collision response
             Vector3 v_n_minus = Vector3.Dot(newState.velocity, plane.normal) * plane.normal;
             Vector3 v_t_minus = newState.velocity - v_n_minus;
-
+        
             Vector3 v_n_plus = -c_r * Vector3.Dot(newState.velocity, plane.normal) * plane.normal;
             Vector3 v_t_plus = (1.0f - c_f) * v_t_minus;
-
+        
             newState.velocity = v_n_plus + v_t_plus;
             newState.Integrate(Vector3.zero, deltaTime - deltaTimeCollision);
         }
