@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -186,7 +186,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!64 &26964199
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -458,7 +458,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!64 &1038168223
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -552,7 +552,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1447374100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -582,6 +582,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -20.18, y: 3.39, z: 12.51}
+--- !u!1 &1528728393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1528728394}
+  m_Layer: 0
+  m_Name: SceneManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1528728394
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528728393}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.38173407, y: 0.76155293, z: -0.40433025}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4745278290048184527
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -590,12 +620,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4745278291715835813, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
+      propertyPath: c_f
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745278291715835813, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
+      propertyPath: c_r
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745278291715835813, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
+      propertyPath: planeMesh
+      value: 
+      objectReference: {fileID: 26964198}
+    - target: {fileID: 4745278291715835813, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
       propertyPath: velocity.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4745278291715835813, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
       propertyPath: velocity.z
       value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745278291715835813, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
+      propertyPath: airResistance
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 4745278291715835813, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
       propertyPath: windVelocity.z
@@ -665,13 +711,17 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 4736c33de281dde4e8d165d74cd8605c, type: 2}
+    - target: {fileID: 4745278291715835817, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4745278291715835818, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
       propertyPath: m_Name
       value: BouncingSphere
       objectReference: {fileID: 0}
     - target: {fileID: 4745278291715835818, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}

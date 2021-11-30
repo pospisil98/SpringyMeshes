@@ -17,6 +17,8 @@ public class SBNode
     
     private List<SBSDampedSpring> springs = new List<SBSDampedSpring>();
 
+    private const float epsilon = 0.1f;
+
     public SBNode(Vector3 position, float mass)
     {
         state = new State(Vector3.zero, position, Vector3.zero);
@@ -29,6 +31,11 @@ public class SBNode
         if (isFixed)
         {
             state.velocity = Vector3.zero;
+            state.force = Vector3.zero;
+            return;
+        }
+        
+        if (isResting()) {
             state.force = Vector3.zero;
             return;
         }
@@ -101,6 +108,29 @@ public class SBNode
         state = newState;
         
 
+    }
+    
+    bool isResting()
+    {
+        if (state.velocity.magnitude < epsilon) {
+            //Debug.Log("Node Velocity under epsilon");
+            if (plane.sphereDist(state.position, 0.25f) < epsilon) {
+                //Debug.Log("Distance under epsilon");
+                if (Vector3.Dot(state.force, plane.normal) < epsilon) {
+                    //Debug.Log("Plane under sphere");
+                    Vector3 fn = Vector3.Dot(plane.normal, state.force) * plane.normal;
+                    Vector3 ft = state.force - fn;
+
+                    if (ft.magnitude < fn.magnitude){ 
+                        // object is at rest
+                        Debug.Log("Mesh is at rest");
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public void AddForce(Vector3 force)

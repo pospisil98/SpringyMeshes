@@ -19,11 +19,16 @@ public class BouncingBall : MonoBehaviour
 
     private float dilation = 1.0f;
     private Plane plane;
-    
+
+    public GameObject planeMesh;
+
+    private const float epsilon = 0.1f;
+
     void Start()
     {
+        Physics.autoSimulation = false;
         state = new State(initialVelocity, transform.position);
-        plane = new Plane(Vector3.zero, Vector3.up);
+        plane = new Plane(Vector3.zero, planeMesh.transform.up);
     }
 
     // Update is called once per frame
@@ -31,9 +36,18 @@ public class BouncingBall : MonoBehaviour
     {
         float deltaTime = Time.fixedDeltaTime * dilation;
         
+        force += Physics.gravity * mass; // gravity
+        force += -airResistance * state.velocity; // air resistance
+        force += airResistance * windVelocity; // wind
+
+        if (isResting()) {
+            force = Vector3.zero;
+            return;
+        }
+
         // Determine accelerations by Newton’s second law
-        Vector3 acceleration = Physics.gravity + (airResistance / mass) * (windVelocity - state.velocity);
-        
+        Vector3 acceleration = force / mass;
+
         // new-state = Integration of accelerations over timestep delta
         State newState = new State(state.velocity, state.position);
         newState.Integrate(acceleration, deltaTime);
@@ -64,7 +78,31 @@ public class BouncingBall : MonoBehaviour
         state = newState;
         transform.position = state.position;
         
+        force =  Vector3.zero;
     }
-    
+
+    bool isResting()
+    {
+        if (state.velocity.magnitude < epsilon) {
+            //Debug.Log("Velocity under epsilon");
+            if (plane.sphereDist(state.position, 0.25f) < epsilon) {
+                //Debug.Log("Distance under epsilon");
+                if (Vector3.Dot(force, plane.normal) < epsilon) {
+                    //Debug.Log("Plane under sphere");
+                    Vector3 fn = Vector3.Dot(plane.normal, force) * plane.normal;
+                    Vector3 ft = force - fn;
+
+                    if (ft.magnitude < fn.magnitude){ 
+                        // object is at rest
+                        //Debug.Log("Sphere is at rest");
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
 
 }
