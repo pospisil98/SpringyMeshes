@@ -30,14 +30,14 @@ public class SoftBody : MonoBehaviour
 
         particles = new List<SBNode>
         {
-            new SBNode(new Vector3(0, 0, 0), 1.0f),
-            new SBNode(new Vector3(1, 0, 0), 1.0f),
-            new SBNode(new Vector3(1, 1, 0), 1.0f),
-            new SBNode(new Vector3(0, 1, 0), 1.0f),
-            new SBNode(new Vector3(0, 1, 1), 1.0f),
-            new SBNode(new Vector3(1, 1, 1), 1.0f),
-            new SBNode(new Vector3(1, 0, 1), 1.0f),
-            new SBNode(new Vector3(0, 0, 1), 1.0f),
+            new SBNode( new Vector3(0, 0, 0), 1.0f),
+            new SBNode( new Vector3(1, 0, 0), 1.0f),
+            new SBNode( new Vector3(1, 1, 0), 1.0f),
+            new SBNode( new Vector3(0, 1, 0), 1.0f),
+            new SBNode( new Vector3(0, 1, 1), 1.0f),
+            new SBNode( new Vector3(1, 1, 1), 1.0f),
+            new SBNode( new Vector3(1, 0, 1), 1.0f),
+            new SBNode( new Vector3(0, 0, 1), 1.0f),
         };
         //
         // particles[2].IsFixed = true;
@@ -134,10 +134,10 @@ public class SoftBody : MonoBehaviour
 
         float d = 1.0f;
         // air drag
-        for (int i = 0; i < particles.Count; i++)
-        {
-            particles[i].AddForce(- d  * particles[i].Velocity);
-        }
+        // for (int i = 0; i < particles.Count; i++)
+        // {
+        //     particles[i].AddForce(- d  * particles[i].Velocity);
+        // }
 
         // wind
         // float u = UnityEngine.Random.value;

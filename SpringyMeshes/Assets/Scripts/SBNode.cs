@@ -96,10 +96,10 @@ public class SBNode
             newState.Integrate(acceleration, deltaTimeCollision);
         
             // collision response
-            Vector3 v_n_minus = Vector3.Dot(newState.velocity, plane.normal) * plane.normal;
+            Vector3 v_n_minus = Vector3.Dot(newState.velocity, transform.InverseTransformDirection(plane.normal)) * transform.InverseTransformDirection(plane.normal);
             Vector3 v_t_minus = newState.velocity - v_n_minus;
         
-            Vector3 v_n_plus = -c_r * Vector3.Dot(newState.velocity, plane.normal) * plane.normal;
+            Vector3 v_n_plus = -c_r * Vector3.Dot(newState.velocity, transform.InverseTransformDirection(plane.normal)) * transform.InverseTransformDirection(plane.normal);
             Vector3 v_t_plus = (1.0f - c_f) * v_t_minus;
         
             newState.velocity = v_n_plus + v_t_plus;
@@ -118,9 +118,9 @@ public class SBNode
             //Debug.Log("Node Velocity under epsilon");
             if (plane.sphereDist(transform.TransformPoint(state.position) , 0.25f) < epsilon) {
                 //Debug.Log("Distance under epsilon");
-                if (Vector3.Dot(state.force, plane.normal) < epsilon) {
+                if (Vector3.Dot(state.force, transform.InverseTransformDirection(plane.normal)) < epsilon) {
                     //Debug.Log("Plane under sphere");
-                    Vector3 fn = Vector3.Dot(plane.normal, state.force) * plane.normal;
+                    Vector3 fn = Vector3.Dot(transform.InverseTransformDirection(plane.normal), state.force) * transform.InverseTransformDirection(plane.normal);
                     Vector3 ft = state.force - fn;
 
                     if (ft.magnitude < fn.magnitude){ 
