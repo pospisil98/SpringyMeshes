@@ -19,6 +19,8 @@ public class SBNode
 
     private const float epsilon = 0.1f;
 
+    public bool isAtRestFlag = false;
+
     public SBNode(Vector3 position, float mass)
     {
         state = new State(Vector3.zero, position, Vector3.zero);
@@ -35,7 +37,7 @@ public class SBNode
             return;
         }
         
-        if (isResting()) {
+        if (isResting(transform)) {
             state.force = Vector3.zero;
             return;
         }
@@ -110,11 +112,11 @@ public class SBNode
 
     }
     
-    bool isResting()
+    bool isResting(Transform transform)
     {
         if (state.velocity.magnitude < epsilon) {
             //Debug.Log("Node Velocity under epsilon");
-            if (plane.sphereDist(state.position, 0.25f) < epsilon) {
+            if (plane.sphereDist(transform.TransformPoint(state.position) , 0.25f) < epsilon) {
                 //Debug.Log("Distance under epsilon");
                 if (Vector3.Dot(state.force, plane.normal) < epsilon) {
                     //Debug.Log("Plane under sphere");
@@ -124,12 +126,14 @@ public class SBNode
                     if (ft.magnitude < fn.magnitude){ 
                         // object is at rest
                         Debug.Log("Mesh is at rest");
+                        isAtRestFlag = true;
                         return true;
                     }
                 }
             }
         }
 
+        isAtRestFlag = false;
         return false;
     }
 

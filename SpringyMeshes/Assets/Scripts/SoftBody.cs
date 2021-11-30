@@ -187,11 +187,16 @@ public class SoftBody : MonoBehaviour
     {
         if (drawGizmos)
         {
-            Gizmos.color = Color.red;
             if (particles != null)
             {
                 for (int i = 0; i < particles.Count; i++)
                 {
+                    if (particles[i].isAtRestFlag) {
+                        Gizmos.color = Color.green;
+                    } else {
+                        Gizmos.color = Color.red;
+                    }
+
                     Gizmos.DrawSphere(transform.TransformPoint(particles[i].Position), 0.05f);
                 }
             }
