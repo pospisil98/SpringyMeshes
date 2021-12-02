@@ -82,10 +82,13 @@ public abstract class SoftBody : MonoBehaviour
         }
 
         mesh.vertices = positions.ToArray();
+        // TODO: not necessary to udpate triangles
         mesh.triangles = triangles.ToArray();
 
         mesh.Optimize();
         mesh.RecalculateNormals();
+        mesh.RecalculateTangents();
+        mesh.RecalculateBounds();
     }
 
     protected virtual void OnDrawGizmos()
@@ -104,10 +107,10 @@ public abstract class SoftBody : MonoBehaviour
 
                 for (int i = 0; i < dampedSprings.Count; i++) {
                     Gizmos.color = Color.cyan;
-                    Vector3 dir = transform.TransformVector(dampedSprings[i].GetEndPosition()) -
-                                  transform.TransformVector(dampedSprings[i].GetStartPosition());
-                    //DrawArrow.ForGizmo(transform.TransformVector(dampedSprings[i].GetStartPosition()), dir);
-                    Gizmos.DrawLine(transform.TransformPoint(dampedSprings[i].GetStartPosition()), transform.TransformPoint(dampedSprings[i].GetEndPosition()));
+                    Vector3 dir = transform.TransformPoint(dampedSprings[i].GetEndPosition()) -
+                                  transform.TransformPoint(dampedSprings[i].GetStartPosition());
+                    DrawArrow.ForGizmo(transform.TransformPoint(dampedSprings[i].GetStartPosition()), dir);
+                    //Gizmos.DrawLine(transform.TransformPoint(dampedSprings[i].GetStartPosition()), transform.TransformPoint(dampedSprings[i].GetEndPosition()));
                 }
             }
         }
