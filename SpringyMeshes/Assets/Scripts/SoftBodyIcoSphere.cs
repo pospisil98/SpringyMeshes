@@ -42,7 +42,7 @@ public class SoftBodyIcoSphere : SoftBody
 
 
         particles = new List<SBNode>();
-        dampedSprings = new List<SBSDampedSpring>();
+        dampedSprings = new List<SBDampedSpring>();
         triangles = new List<int>();
 
         List<VertexHelper> vertexIndexHelper = new List<VertexHelper>();
@@ -85,19 +85,19 @@ public class SoftBodyIcoSphere : SoftBody
             
             EdgeHelper edgeHelper = new EdgeHelper(editedIndex0, editedIndex1);
             if (!springsInMesh.Any(x => x.Equals(edgeHelper))) {
-                dampedSprings.Add(new SBSDampedSpring(particles[editedIndex0],particles[editedIndex1], k, d));
+                dampedSprings.Add(new SBDampedSpring(particles[editedIndex0],particles[editedIndex1], k, d));
                 springsInMesh.Add(edgeHelper);
             }
 
             edgeHelper = new EdgeHelper(editedIndex1, editedIndex2);
             if (!springsInMesh.Any(x => x.Equals(edgeHelper))) {
-                dampedSprings.Add(new SBSDampedSpring(particles[editedIndex1], particles[editedIndex2], k, d));
+                dampedSprings.Add(new SBDampedSpring(particles[editedIndex1], particles[editedIndex2], k, d));
                 springsInMesh.Add(edgeHelper);
             }
 
             edgeHelper = new EdgeHelper(editedIndex2, editedIndex0);
             if (!springsInMesh.Any(x => x.Equals(edgeHelper))) {
-                dampedSprings.Add(new SBSDampedSpring(particles[editedIndex2],particles[editedIndex0], k, d));
+                dampedSprings.Add(new SBDampedSpring(particles[editedIndex2],particles[editedIndex0], k, d));
                 springsInMesh.Add(edgeHelper);
             }
         }
@@ -125,7 +125,7 @@ public class SoftBodyIcoSphere : SoftBody
         particles.Add(new SBNode(Vector3.zero, 1f));
         for (int i = 0; i < particles.Count - 1; i++) {
             // dampedSprings.Add(new SBSDampedSpring(particles[i], particles[particles.Count - 1], 20f, 0.6f));
-            dampedSprings.Add(new SBSDampedSpring(particles[i], particles[particles.Count - 1], k, d));
+            dampedSprings.Add(new SBDampedSpring(particles[i], particles[particles.Count - 1], k, d));
         }
     }
 

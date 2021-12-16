@@ -53,50 +53,50 @@ public class SoftBodyBox : SoftBody
         // particles[4].IsFixed = true;
         // particles[5].IsFixed = true;
 
-        dampedSprings = new List<SBSDampedSpring>
+        dampedSprings = new List<SBDampedSpring>
         {
             // vertical
-            new SBSDampedSpring(particles[1], particles[2], k, d),
-            new SBSDampedSpring(particles[3], particles[0], k, d),
-            new SBSDampedSpring(particles[5], particles[6], k, d),
-            new SBSDampedSpring(particles[4], particles[7], k, d),
+            new SBDampedSpring(particles[1], particles[2], k, d),
+            new SBDampedSpring(particles[3], particles[0], k, d),
+            new SBDampedSpring(particles[5], particles[6], k, d),
+            new SBDampedSpring(particles[4], particles[7], k, d),
 
             // vertical diagonal
-            new SBSDampedSpring(particles[0], particles[2], k, d),
-            new SBSDampedSpring(particles[1], particles[3], k, d),
-            new SBSDampedSpring(particles[1], particles[5], k, d),
-            new SBSDampedSpring(particles[2], particles[6], k, d),
-            new SBSDampedSpring(particles[4], particles[6], k, d),
-            new SBSDampedSpring(particles[5], particles[7], k, d),
-            new SBSDampedSpring(particles[0], particles[4], k, d),
-            new SBSDampedSpring(particles[3], particles[7], k, d),
+            new SBDampedSpring(particles[0], particles[2], k, d),
+            new SBDampedSpring(particles[1], particles[3], k, d),
+            new SBDampedSpring(particles[1], particles[5], k, d),
+            new SBDampedSpring(particles[2], particles[6], k, d),
+            new SBDampedSpring(particles[4], particles[6], k, d),
+            new SBDampedSpring(particles[5], particles[7], k, d),
+            new SBDampedSpring(particles[0], particles[4], k, d),
+            new SBDampedSpring(particles[3], particles[7], k, d),
 
 
             // horizontal bottom
-            new SBSDampedSpring(particles[0], particles[1], k, d),
-            new SBSDampedSpring(particles[1], particles[6], k, d),
-            new SBSDampedSpring(particles[6], particles[7], k, d),
-            new SBSDampedSpring(particles[0], particles[7], k, d),
+            new SBDampedSpring(particles[0], particles[1], k, d),
+            new SBDampedSpring(particles[1], particles[6], k, d),
+            new SBDampedSpring(particles[6], particles[7], k, d),
+            new SBDampedSpring(particles[0], particles[7], k, d),
 
             // horizontal bottom diagonal
-            new SBSDampedSpring(particles[0], particles[6], k, d),
-            new SBSDampedSpring(particles[1], particles[7], k, d),
+            new SBDampedSpring(particles[0], particles[6], k, d),
+            new SBDampedSpring(particles[1], particles[7], k, d),
 
             // horizontal top
-            new SBSDampedSpring(particles[2], particles[3], k, d),
-            new SBSDampedSpring(particles[2], particles[5], k, d),
-            new SBSDampedSpring(particles[3], particles[4], k, d),
-            new SBSDampedSpring(particles[4], particles[5], k, d),
+            new SBDampedSpring(particles[2], particles[3], k, d),
+            new SBDampedSpring(particles[2], particles[5], k, d),
+            new SBDampedSpring(particles[3], particles[4], k, d),
+            new SBDampedSpring(particles[4], particles[5], k, d),
 
             // horizontal top diagonal
-            new SBSDampedSpring(particles[2], particles[4], k, d),
-            new SBSDampedSpring(particles[3], particles[5], k, d),
+            new SBDampedSpring(particles[2], particles[4], k, d),
+            new SBDampedSpring(particles[3], particles[5], k, d),
 
 
-            new SBSDampedSpring(particles[0], particles[5], k, d),
-            new SBSDampedSpring(particles[1], particles[4], k, d),
-            new SBSDampedSpring(particles[3], particles[6], k, d),
-            new SBSDampedSpring(particles[2], particles[7], k, d),
+            new SBDampedSpring(particles[0], particles[5], k, d),
+            new SBDampedSpring(particles[1], particles[4], k, d),
+            new SBDampedSpring(particles[3], particles[6], k, d),
+            new SBDampedSpring(particles[2], particles[7], k, d),
         };
 
         triangles = new List<int>

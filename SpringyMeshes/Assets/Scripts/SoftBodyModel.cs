@@ -18,7 +18,7 @@ public class SoftBodyModel : SoftBody
 
 
         particles = new List<SBNode>();
-        dampedSprings = new List<SBSDampedSpring>();
+        dampedSprings = new List<SBDampedSpring>();
         triangles = new List<int>();
 
         List<VertexHelper> vertexIndexHelper = new List<VertexHelper>();
@@ -73,19 +73,19 @@ public class SoftBodyModel : SoftBody
 
             EdgeHelper edgeHelper = new EdgeHelper(editedIndex0, editedIndex1);
             if (!springsInMesh.Any(x => x.Equals(edgeHelper))) {
-                dampedSprings.Add(new SBSDampedSpring(particles[editedIndex0], particles[editedIndex1]));
+                dampedSprings.Add(new SBDampedSpring(particles[editedIndex0], particles[editedIndex1]));
                 springsInMesh.Add(edgeHelper);
             }
 
             edgeHelper = new EdgeHelper(editedIndex1, editedIndex2);
             if (!springsInMesh.Any(x => x.Equals(edgeHelper))) {
-                dampedSprings.Add(new SBSDampedSpring(particles[editedIndex1], particles[editedIndex2]));
+                dampedSprings.Add(new SBDampedSpring(particles[editedIndex1], particles[editedIndex2]));
                 springsInMesh.Add(edgeHelper);
             }
 
             edgeHelper = new EdgeHelper(editedIndex2, editedIndex0);
             if (!springsInMesh.Any(x => x.Equals(edgeHelper))) {
-                dampedSprings.Add(new SBSDampedSpring(particles[editedIndex2], particles[editedIndex0]));
+                dampedSprings.Add(new SBDampedSpring(particles[editedIndex2], particles[editedIndex0]));
                 springsInMesh.Add(edgeHelper);
             }
         }

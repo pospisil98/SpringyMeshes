@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using UnityEngine;
 
-public class SBSDampedSpring
+public class SBDampedSpring
 {
     private float restLength;
 
@@ -17,7 +17,7 @@ public class SBSDampedSpring
     private SBNode start;
     private SBNode end;
 
-    public SBSDampedSpring(SBNode start, SBNode end)
+    public SBDampedSpring(SBNode start, SBNode end)
     {
         this.start = start;
         this.end = end;
@@ -25,7 +25,7 @@ public class SBSDampedSpring
         restLength = Vector3.Distance(start.Position, end.Position);
     }
 
-    public SBSDampedSpring(SBNode start, SBNode end, float k, float d)
+    public SBDampedSpring(SBNode start, SBNode end, float k, float d)
     {
         this.start = start;
         this.end = end;

@@ -17,7 +17,7 @@ public abstract class SoftBody : MonoBehaviour
     protected Mesh mesh;
 
     protected List<SBNode> particles;
-    protected List<SBSDampedSpring> dampedSprings;
+    protected List<SBDampedSpring> dampedSprings;
     protected List<int> triangles;
 
     protected virtual void OnEnable()

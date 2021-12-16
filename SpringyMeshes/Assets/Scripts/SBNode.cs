@@ -14,8 +14,6 @@ public class SBNode
     private float c_f = 0.0f;
 
     private bool isFixed = false;
-    
-    private List<SBSDampedSpring> springs = new List<SBSDampedSpring>();
 
     private const float epsilon = 0.1f;
 
@@ -138,10 +136,5 @@ public class SBNode
         get => isFixed;
         set => isFixed = value;
     }
-
-    public List<SBSDampedSpring> Springs
-    {
-        get => springs;
-        set => springs = value;
-    }
+    
 }
