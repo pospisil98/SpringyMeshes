@@ -6,6 +6,11 @@ public abstract class SoftBody : MonoBehaviour
 {
     public bool drawGizmos = false;
     public Material mat;
+    
+    [Range(0, 50)]
+    public float k = 4.0f * (float) (Math.PI * Math.PI);
+    [Range(0, 20)]
+    public float d = 0.8f * (float) Math.PI;
 
     protected MeshRenderer meshRenderer;
     protected MeshFilter meshFilter;
