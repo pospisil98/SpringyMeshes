@@ -115,4 +115,75 @@ public abstract class SoftBody : MonoBehaviour
             }
         }
     }
+    
+    protected int FindIndexOfClosestHelper(Vector3 pos, List<VertexHelper> vertexHelpers)
+    {
+        int index = -1;
+        float minDist = float.MaxValue;
+
+        for (int i = 0; i < vertexHelpers.Count; i++) {
+            float dist = Vector3.Distance(vertexHelpers[i].position, pos);
+
+            if (dist < minDist) {
+                minDist = dist;
+                index = i;
+            }
+        }
+
+        return index;
+    }
+    
+    protected struct EdgeHelper
+    {
+        public int from;
+        public int to;
+
+        public EdgeHelper(int f, int t)
+        {
+            this.from = f;
+            this.to = t;
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (!(obj is EdgeHelper))
+                return false;
+
+            EdgeHelper other = (EdgeHelper) obj;
+            
+            return (this.from == other.from && this.to == other.to) || (this.from == other.to && this.to == other.from);
+        }
+        
+        public override int GetHashCode()
+        {
+            return this.from.GetHashCode() * 17 + this.to.GetHashCode();
+        }
+    }
+
+    protected class VertexHelperComparer : IEqualityComparer<VertexHelper>
+    {
+        public bool Equals(VertexHelper one, VertexHelper two)
+        {
+            return Vector3.Distance(one.position, two.position) < 0.01f;
+        }
+
+        public int GetHashCode(VertexHelper item)
+        {
+            return item.GetHashCode();
+        }
+    }
+
+    protected struct VertexHelper
+    {
+        public Vector3 position;
+        public int globalIndex;
+        public int editedIndex;
+
+        public VertexHelper(Vector3 position, int globalIndex, int editedIndex)
+        {
+            this.position = position;
+            this.globalIndex = globalIndex;
+            this.editedIndex = editedIndex;
+        }
+    }
 }
