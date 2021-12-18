@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.UIElements;
+
 
 public class SoftBodyIcoSphere : SoftBody
 {
@@ -15,10 +14,7 @@ public class SoftBodyIcoSphere : SoftBody
         base.OnEnable();
     }
 
-    protected override void Start()
-    {
-        base.Start();
-    }
+    protected override void Start() { }
 
     protected override void Update()
     {

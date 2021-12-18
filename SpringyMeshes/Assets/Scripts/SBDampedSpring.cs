@@ -14,8 +14,8 @@ public class SBDampedSpring
     private float d = 0.8f * (float) Math.PI;
     //private float d  = 0f;
 
-    private SBNode start;
-    private SBNode end;
+    public SBNode start;
+    public SBNode end;
 
     public SBDampedSpring(SBNode start, SBNode end)
     {

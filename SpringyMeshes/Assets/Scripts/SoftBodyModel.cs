@@ -64,7 +64,7 @@ public class SoftBodyModel : SoftBody
 
 
             if (editedIndex0 == editedIndex1 || editedIndex1 == editedIndex2 || editedIndex0 == editedIndex2) {
-                Debug.Log("Sva stejný cigáne");
+                Debug.Log("Dva stejný cigáne");
             }
 
             //Debug.Log("EditedIndex: " + editedIndex0 + "  GlobalIndex: " + mesh.triangles[triangleIndex] + "  Pos: " + mesh.vertices[mesh.triangles[triangleIndex]] + "Edited Pos:" + mesh.vertices[editedIndex0]);
