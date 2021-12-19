@@ -103,7 +103,7 @@ public class SpringyMesh : MonoBehaviour
             {
                 s1 = new Strut(k, d, vertices[id1], vertices[id2])
                 {
-                    f1 = face,
+                    face1 = face,
                     opposite1 = vertices[id3]
                 };
 
@@ -111,15 +111,16 @@ public class SpringyMesh : MonoBehaviour
             }
             else
             {
-                s1.f2 = face;
+                s1.face2 = face;
                 s1.opposite2 = vertices[id3];
+                s1.CalculateRestAngle();
             }
 
             if (s2 == null)
             {
                 s2 = new Strut(k, d, vertices[id2], vertices[id3])
                 {
-                    f1 = face,
+                    face1 = face,
                     opposite1 = vertices[id1]
                 };
 
@@ -127,15 +128,16 @@ public class SpringyMesh : MonoBehaviour
             }
             else
             {
-                s2.f2 = face;
+                s2.face2 = face;
                 s2.opposite2 = vertices[id1];
+                s2.CalculateRestAngle();
             }
 
             if (s3 == null)
             {
                 s3 = new Strut(k, d, vertices[id3], vertices[id1])
                 {
-                    f1 = face,
+                    face1 = face,
                     opposite1 = vertices[id2]
                 };
 
@@ -143,8 +145,9 @@ public class SpringyMesh : MonoBehaviour
             }
             else
             {
-                s3.f2 = face;
+                s3.face2 = face;
                 s3.opposite2 = vertices[id2];
+                s3.CalculateRestAngle();
             }
         }
     }
