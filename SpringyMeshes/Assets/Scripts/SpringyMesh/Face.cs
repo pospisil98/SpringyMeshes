@@ -5,6 +5,7 @@ using UnityEngine.PlayerLoop;
 
 public class Face
 {
+    public int id;
     public float angle1;
     public float angle2;
     public float angle3;
@@ -15,8 +16,9 @@ public class Face
     public Vertex v2;
     public Vertex v3;
 
-    public Face(Vertex v1, Vertex v2, Vertex v3)
+    public Face(int id, Vertex v1, Vertex v2, Vertex v3)
     {
+        this.id = id;
         this.v1 = v1;
         this.v2 = v2;
         this.v3 = v3;
@@ -29,6 +31,6 @@ public class Face
         angle2 = Vector3.Angle(v1.Position - v2.Position, v3.Position - v2.Position);
         angle3 = Vector3.Angle(v2.Position - v3.Position, v1.Position - v3.Position);
         
-        normal =  Vector3.Cross(v3.Position - v1.Position, v2.Position - v1.Position).normalized;
+        normal =  Vector3.Cross( v2.Position - v1.Position,v3.Position - v1.Position).normalized;
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Strut
 {
+    public int id;
     public float k;
     public float d;
     private float restLength;
@@ -21,8 +22,10 @@ public class Strut
     public Vertex opposite2;
 
 
-    public Strut(float k, float d, Vertex from, Vertex to)
+    public Strut(int id, float k, float d, Vertex from, Vertex to)
     {
+        this.id = id;
+        
         this.k = k;
         this.d = d;
 
@@ -30,15 +33,35 @@ public class Strut
         this.to = to;
 
         this.restLength = Vector3.Distance(from.Position, to.Position);
-        
-        //TODO: fix
-        this.kTheta = 1;
-        this.dTheta = 1;
     }
 
-    public void CalculateRestAngle()
+    public void Preprocess()
     {
         this.restAngle = Vector3.Angle(face1.normal, face2.normal);
+        
+        float Ttheta = 0.101f;
+        float Ptheta = 0.501f;
+        Vector3 h = (to.Position - from.Position).normalized;
+        Vector3 x02 = opposite1.Position - from.Position;
+        Vector3 x03 = opposite2.Position - from.Position;
+        // Vector3 h = (from.Position - to.Position).normalized;
+        // Vector3 x02 = from.Position - opposite1.Position;
+        // Vector3 x03 = from.Position - opposite2.Position;
+        Vector3 r_l = x02 - Vector3.Dot(x02, h) * h;
+        Vector3 r_r = x03 - Vector3.Dot(x03, h) * h;
+        float avgDist = 0.5f * (Vector3.Magnitude(r_l) + Vector3.Magnitude(r_r));
+
+        float mass1 = opposite1.mass;
+        float mass2 = opposite2.mass;
+        float avgMass = 0.5f * (mass1 + mass2);
+        
+        dTheta = 2.0f * avgMass * avgDist / Ttheta;
+        kTheta = 4.0f * Mathf.PI * Mathf.PI * avgDist * avgDist * avgMass / (Ptheta * Ptheta);        
+        // dTheta = 0.2f;
+        // kTheta = 0.1f;
+        dTheta = 0.4f;
+        kTheta = 0.1f;
+
     }
 
     public bool IsSame(int id1, int id2)
@@ -67,6 +90,9 @@ public class Strut
         Vector3 h = (to.Position - from.Position).normalized;
         Vector3 x02 = opposite1.Position - from.Position;
         Vector3 x03 = opposite2.Position - from.Position;
+        // Vector3 h = (from.Position - to.Position).normalized;
+        // Vector3 x02 = from.Position - opposite1.Position;
+        // Vector3 x03 = from.Position - opposite2.Position;
         
         // vectors formed by lofting a perpendicular from the hinge edge
         Vector3 r_l = x02 - Vector3.Dot(x02, h) * h;
@@ -75,12 +101,15 @@ public class Strut
         Vector3 n_l = face1.normal;
         Vector3 n_r = face2.normal;
 
-        float theta = Mathf.Atan2(Vector3.Dot(Vector3.Cross(n_l, n_r), h), Vector3.Dot(n_l, n_r));
+        // float theta = Mathf.Atan2(Vector3.Dot(Vector3.Cross(n_l, n_r), h), Vector3.Dot(n_l, n_r));
+        float theta = Vector3.Angle(n_l, n_r);
 
         Vector3 tau_k = kTheta * (theta - restAngle) * h;
 
         float theta_l = Vector3.Dot(opposite1.Velocity, n_l) / Vector3.Magnitude(r_l);
-        float theta_r = Vector3.Dot(opposite2.Velocity, n_r) / Vector3.Magnitude(r_r);
+        float theta_r = Vector3.Dot(opposite2.Velocity, n_r) / Vector3.Magnitude(r_r);        
+        // float theta_l = Mathf.Abs(Vector3.Dot(opposite1.Velocity, n_l) / Vector3.Magnitude(r_l));
+        // float theta_r = Mathf.Abs(Vector3.Dot(opposite2.Velocity, n_r) / Vector3.Magnitude(r_r));
 
         Vector3 tau_d = -dTheta * (theta_l + theta_r) * h;
 
@@ -95,6 +124,10 @@ public class Strut
         Vector3 f1 = -(d02 * f2 + d03 * f3)/ Vector3.Magnitude(to.Position - from.Position);
         Vector3 f0 = -(f1 + f2 + f3);
         
+        // Debug.Log(id + " theta l, r: " + theta_l + " " + theta_r);
+        // Debug.Log(id + " tau: " + tau_k + " " + tau_d);
+        // Debug.Log(id + " force: " + f0 + " " + f1 + " " + f2 + " " + f3);
+
         from.AddForce(f0);
         to.AddForce(f1);
         opposite1.AddForce(f2);

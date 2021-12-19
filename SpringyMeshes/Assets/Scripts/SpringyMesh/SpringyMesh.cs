@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class SpringyMesh : MonoBehaviour
 {
-    [Range(0, 50)] public float k = 4.0f * (float) (Math.PI * Math.PI);
-    [Range(0, 20)] public float d = 0.8f * (float) Math.PI;
+    // [Range(0, 50)] public float k = 4.0f * (float) (Math.PI * Math.PI);
+    // [Range(0, 20)] public float d = 0.8f * (float) Math.PI;
 
     private List<Strut> struts;
     private List<Face> faces;
@@ -33,50 +33,61 @@ public class SpringyMesh : MonoBehaviour
         struts = new List<Strut>();
         faces = new List<Face>();
 
-        /*
+
+
+        float mass = 1.0f;
+        // int vertexCount = 8;
+        int vertexCount = 4;
+        float T = 5.0f;
+        float P = 5.0f;
+
+        float d = 2.0f * mass / T;
+        float k = 4.0f * Mathf.PI * Mathf.PI * (mass / vertexCount) / (P * P);
+
+         
+         // vertices = new List<Vertex>
+         // {
+         //     new Vertex(new Vector3(0, 0, 0), mass / vertexCount),
+         //     new Vertex(new Vector3(1, 0, 0), mass / vertexCount),
+         //     new Vertex(new Vector3(1, 1, 0), mass / vertexCount),
+         //     new Vertex(new Vector3(0, 1, 0), mass / vertexCount),
+         //     new Vertex(new Vector3(0, 1, 1), mass / vertexCount),
+         //     new Vertex(new Vector3(1, 1, 1), mass / vertexCount),
+         //     new Vertex(new Vector3(1, 0, 1), mass / vertexCount),
+         //     new Vertex(new Vector3(0, 0, 1), mass / vertexCount),
+         // };
+         //
+         // triangles = new List<int>
+         // {
+         //     0, 2, 1, //face front
+         //     0, 3, 2,
+         //     2, 3, 4, //face top
+         //     2, 4, 5,
+         //     1, 2, 5, //face right
+         //     1, 5, 6,
+         //     0, 7, 4, //face left
+         //     0, 4, 3,
+         //     5, 4, 7, //face back
+         //     5, 7, 6,
+         //     0, 6, 7, //face bottom
+         //     0, 1, 6
+         // };
+         
+
         vertices = new List<Vertex>
         {
-            new Vertex(new Vector3(0, 0, 0), 1.0f),
-            new Vertex(new Vector3(1, 0, 0), 1.0f),
-            new Vertex(new Vector3(1, 1, 0), 1.0f),
-            new Vertex(new Vector3(0, 1, 0), 1.0f),
-            new Vertex(new Vector3(0, 1, 1), 1.0f),
-            new Vertex(new Vector3(1, 1, 1), 1.0f),
-            new Vertex(new Vector3(1, 0, 1), 1.0f),
-            new Vertex(new Vector3(0, 0, 1), 1.0f),
+            new Vertex(new Vector3(0, 0, 0), mass / vertexCount),
+            new Vertex(new Vector3(1, 0, 0), mass / vertexCount),
+            new Vertex(new Vector3(0, 0, 1), mass / vertexCount),
+            new Vertex(new Vector3(0, 1, 0), mass / vertexCount),
         };
-
+        
         triangles = new List<int>
         {
-            0, 2, 1, //face front
-            0, 3, 2,
-            2, 3, 4, //face top
-            2, 4, 5,
-            1, 2, 5, //face right
-            1, 5, 6,
-            0, 7, 4, //face left
-            0, 4, 3,
-            5, 4, 7, //face back
-            5, 7, 6,
-            0, 6, 7, //face bottom
-            0, 1, 6
-        };
-        */
-
-        vertices = new List<Vertex>
-        {
-            new Vertex(new Vector3(0, 0, 0), 1.0f),
-            new Vertex(new Vector3(1, 0, 0), 1.0f),
-            new Vertex(new Vector3(0, 0, 1), 1.0f),
-            new Vertex(new Vector3(0, 1, 0), 1.0f),
-        };
-
-        triangles = new List<int>
-        {
-            0, 2, 1, // floor
-            0, 1, 3, // XY
-            0, 3, 2, // ZY
-            1, 2, 3  
+            0, 1, 2, // floor
+            0, 3, 1, // XY
+            0, 2, 3, // ZY
+            1, 3, 2  
         };
         
         
@@ -85,13 +96,14 @@ public class SpringyMesh : MonoBehaviour
             vertices[i].id = i;
         }
 
+        int strutId = 0;
         for (int i = 0; i < triangles.Count; i += 3)
         {
             int id1 = triangles[i];
             int id2 = triangles[i + 1];
             int id3 = triangles[i + 2];
 
-            Face face = new Face(vertices[id1], vertices[id2], vertices[id3]);
+            Face face = new Face(i / 3, vertices[id1], vertices[id2], vertices[id3]);
             faces.Add(face);
 
             Strut s1 = null;
@@ -118,53 +130,53 @@ public class SpringyMesh : MonoBehaviour
 
             if (s1 == null)
             {
-                s1 = new Strut(k, d, vertices[id1], vertices[id2])
+                s1 = new Strut(strutId++, k, d, vertices[id1], vertices[id2])
                 {
-                    face1 = face,
-                    opposite1 = vertices[id3]
+                    face2 = face,
+                    opposite2 = vertices[id3]
                 };
 
                 struts.Add(s1);
             }
             else
             {
-                s1.face2 = face;
-                s1.opposite2 = vertices[id3];
-                s1.CalculateRestAngle();
+                s1.face1 = face;
+                s1.opposite1 = vertices[id3];
+                s1.Preprocess();
             }
 
             if (s2 == null)
             {
-                s2 = new Strut(k, d, vertices[id2], vertices[id3])
+                s2 = new Strut(strutId++, k, d, vertices[id2], vertices[id3])
                 {
-                    face1 = face,
-                    opposite1 = vertices[id1]
+                    face2 = face,
+                    opposite2 = vertices[id1]
                 };
 
                 struts.Add(s2);
             }
             else
             {
-                s2.face2 = face;
-                s2.opposite2 = vertices[id1];
-                s2.CalculateRestAngle();
+                s2.face1 = face;
+                s2.opposite1 = vertices[id1];
+                s2.Preprocess();
             }
 
             if (s3 == null)
             {
-                s3 = new Strut(k, d, vertices[id3], vertices[id1])
+                s3 = new Strut(strutId++, k, d, vertices[id3], vertices[id1])
                 {
-                    face1 = face,
-                    opposite1 = vertices[id2]
+                    face2 = face,
+                    opposite2 = vertices[id2]
                 };
 
                 struts.Add(s3);
             }
             else
             {
-                s3.face2 = face;
-                s3.opposite2 = vertices[id2];
-                s3.CalculateRestAngle();
+                s3.face1 = face;
+                s3.opposite1 = vertices[id2];
+                s3.Preprocess();
             }
         }
     }
@@ -232,6 +244,7 @@ public class SpringyMesh : MonoBehaviour
             positions.Add(vertex.Position);
         }
 
+        // needs local coordiantes
         mesh.vertices = positions.ToArray();
         mesh.triangles = triangles.ToArray();
 

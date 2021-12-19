@@ -13,12 +13,15 @@ using UnityEngine;
 
         private bool isFixed = false;
 
-        private const float epsilon = 0.1f;
+        private const float epsilon = 0.05f;
 
         public bool isAtRestFlag = false;
 
-        private float c_r = 1.0f;
-        private float c_f = 0.0f;
+        // coefficient of restitution
+        private float c_r = 0.8f;
+        
+        // coefficient of friction
+        private float c_f = 0.1f;
 
         public Vertex(Vector3 position, float mass)
         {
