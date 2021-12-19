@@ -32,8 +32,8 @@ public class Strut
         this.restLength = Vector3.Distance(from.Position, to.Position);
         
         //TODO: fix
-        this.kTheta = 0.0f;
-        this.dTheta = 0.0f;
+        this.kTheta = 1;
+        this.dTheta = 1;
     }
 
     public void CalculateRestAngle()
@@ -62,66 +62,20 @@ public class Strut
         from.AddForce(f_d);
         to.AddForce(-f_d);
         
-        // TODO: computation of hinge forces
-        
-                                                                                                                                                                                                                
-        //                                                                                       /-          
-        //          -.                                                                           /o.         
-        //         -s-                                                                         `. `/`        
-        //         /` `                                                                        o.   :.       
-        //        /. +.                                                                        :..   //.     
-        //       --  +.`                                                                         .`-/ss:     
-        //      .:    `.                                                   `                  `..:/+o.`/-    
-        //     `/                                                         `::             `..----::.  `--..  
-        //    /h/..`                          -o ``                     +/./+`        `..--`....:.       ``  
-        // `/..:oy+-:---.````                 +/ //`                    -/-  `    `..--.```.``--`            
-        // `:-- ./```........---..````       :- `+/-                      :.  ``.--.`  `..` --`              
-        //    `  `:`    ``..``   `....---..`-:     ``           ``        `/:--.`   `..`  .:.                
-        //        `/`       ``...``      ``:/..---.````        `+:`    `.--.:-    `..`  `:.                  
-        //         `/`           ``..``    -      `....----.`````-:`.--.`    ` `..`   `:-                    
-        //           /.              ``...``               `....:ho.`       `...    `--`                     
-        //            :.                  `...`                 ::`       `..`     .:`                       
-        //             :-                     `....`           --`      ..`      .:.                         
-        //              --                   +.    `...`      .: `   `..       `:-                           
-        //               -:                  :`.       `....``/  ``..``:`     :-                             
-        //                .:                   `            .+  .-.   .:``  -:`                              
-        //                 `/                               /...`-.     ` .:`                                
-        //                  `/                             +-.:` `      `:.                                  
-        //                    /`                          :. .s`      `:-                                    
-        //                     /`                        :-   `.`    :-                                      
-        //                      :.                      --         -:`                                       
-        //                       :-                    .:        .:`                                         
-        //                        --                  `/       `:.                                           
-        //                         -:           `.   `/      `:-                                             
-        //                          .:          +-` -y`     --`                                              
-        //                           .:         o:/ +-    -:`                                                
-        //                            `/`       ```:.   .:.                                                  
-        //                             `:`        --  `:.                                                    
-        //                              `:.      -- `--`                                                     
-        //                                :.    .:`--`                                                       
-        //                                 --  ./-:`                                                         
-        //                                  --`o:.                                                           
-        //                                   oh/``                                                           
-        //                                   `o`.o.                                                          
-        //                                    + ``.-`                                                        
-        //                                `-` :.                                                             
-        //                                -+  .:                                                             
-        //                                `.-.`+`                                                            
-        //                                  ` .h.                                                            
-        //                                     `     
-        
+        // computation of hinge forces
+
         Vector3 h = (to.Position - from.Position).normalized;
         Vector3 x02 = opposite1.Position - from.Position;
         Vector3 x03 = opposite2.Position - from.Position;
         
         // vectors formed by lofting a perpendicular from the hinge edge
         Vector3 r_l = x02 - Vector3.Dot(x02, h) * h;
-        Vector3 r_r = x02 - Vector3.Dot(x02, h) * h;
+        Vector3 r_r = x03 - Vector3.Dot(x03, h) * h;
 
         Vector3 n_l = face1.normal;
         Vector3 n_r = face2.normal;
 
-        float theta = Mathf.Atan2(Vector3.Dot(n_l, n_r), Vector3.Dot(Vector3.Cross(n_l, n_r), h));
+        float theta = Mathf.Atan2(Vector3.Dot(Vector3.Cross(n_l, n_r), h), Vector3.Dot(n_l, n_r));
 
         Vector3 tau_k = kTheta * (theta - restAngle) * h;
 
@@ -145,7 +99,6 @@ public class Strut
         to.AddForce(f1);
         opposite1.AddForce(f2);
         opposite2.AddForce(f3);
-
     }
 }
 

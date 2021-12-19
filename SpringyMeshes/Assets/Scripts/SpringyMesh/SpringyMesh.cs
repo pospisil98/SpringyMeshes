@@ -33,6 +33,7 @@ public class SpringyMesh : MonoBehaviour
         struts = new List<Strut>();
         faces = new List<Face>();
 
+        /*
         vertices = new List<Vertex>
         {
             new Vertex(new Vector3(0, 0, 0), 1.0f),
@@ -44,12 +45,6 @@ public class SpringyMesh : MonoBehaviour
             new Vertex(new Vector3(1, 0, 1), 1.0f),
             new Vertex(new Vector3(0, 0, 1), 1.0f),
         };
-
-        for (int i = 0; i < vertices.Count; i++)
-        {
-            vertices[i].id = i;
-        }
-
 
         triangles = new List<int>
         {
@@ -66,7 +61,29 @@ public class SpringyMesh : MonoBehaviour
             0, 6, 7, //face bottom
             0, 1, 6
         };
+        */
 
+        vertices = new List<Vertex>
+        {
+            new Vertex(new Vector3(0, 0, 0), 1.0f),
+            new Vertex(new Vector3(1, 0, 0), 1.0f),
+            new Vertex(new Vector3(0, 0, 1), 1.0f),
+            new Vertex(new Vector3(0, 1, 0), 1.0f),
+        };
+
+        triangles = new List<int>
+        {
+            0, 2, 1, // floor
+            0, 1, 3, // XY
+            0, 3, 2, // ZY
+            1, 2, 3  
+        };
+        
+        
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            vertices[i].id = i;
+        }
 
         for (int i = 0; i < triangles.Count; i += 3)
         {
