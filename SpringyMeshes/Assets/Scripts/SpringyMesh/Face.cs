@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class Face
 {
@@ -8,14 +9,21 @@ public class Face
     public float angle2;
     public float angle3;
 
-    public Strut s1;
-    public Strut s2;
-    public Strut s3;
+    public Vertex v1;
+    public Vertex v2;
+    public Vertex v3;
 
-    public Face(float angle1, float angle2, float angle3)
+    public Face(Vertex v1, Vertex v2, Vertex v3)
     {
-        this.angle1 = angle1;
-        this.angle2 = angle2;
-        this.angle3 = angle3;
+        this.v1 = v1;
+        this.v2 = v2;
+        this.v3 = v3;
+    }
+
+    public void Update()
+    {
+        angle1 = Vector3.Angle(v3.Position - v1.Position, v2.Position - v1.Position);
+        angle2 = Vector3.Angle(v1.Position - v2.Position, v3.Position - v2.Position);
+        angle3 = Vector3.Angle(v2.Position - v3.Position, v1.Position - v3.Position);
     }
 }

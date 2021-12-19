@@ -74,7 +74,7 @@ public class SpringyMesh : MonoBehaviour
             int id2 = triangles[i + 1];
             int id3 = triangles[i + 2];
 
-            Face face = new Face(0, 0, 0);
+            Face face = new Face(vertices[id1], vertices[id2], vertices[id3]);
             faces.Add(face);
 
             Strut s1 = null;
@@ -179,6 +179,11 @@ public class SpringyMesh : MonoBehaviour
         // {
         //     particles[i].AddForce(dd * (u * Vector3.right + v * Vector3.forward) * 4.0f);
         // }
+
+        for (int i = 0; i < faces.Count; i++)
+        {
+            faces[i].Update();
+        }
 
 
         // Loop over all of the struts, adding each strut’s spring and damper forces to
