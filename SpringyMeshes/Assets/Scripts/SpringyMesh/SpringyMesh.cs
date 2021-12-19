@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class SpringyMesh : MonoBehaviour
 {
+    [Range(0, 50)] public float k = 4.0f * (float) (Math.PI * Math.PI);
+    [Range(0, 20)] public float d = 0.8f * (float) Math.PI;
+
     private List<Strut> struts;
     private List<Face> faces;
     private List<Vertex> vertices;
@@ -29,8 +32,9 @@ public class SpringyMesh : MonoBehaviour
 
         struts = new List<Strut>();
         faces = new List<Face>();
-        
-        vertices = new List<Vertex> {
+
+        vertices = new List<Vertex>
+        {
             new Vertex(new Vector3(0, 0, 0), 1.0f),
             new Vertex(new Vector3(1, 0, 0), 1.0f),
             new Vertex(new Vector3(1, 1, 0), 1.0f),
@@ -41,12 +45,14 @@ public class SpringyMesh : MonoBehaviour
             new Vertex(new Vector3(0, 0, 1), 1.0f),
         };
 
-        for (int i = 0; i < vertices.Count; i++) {
+        for (int i = 0; i < vertices.Count; i++)
+        {
             vertices[i].id = i;
         }
 
 
-        triangles = new List<int> {
+        triangles = new List<int>
+        {
             0, 2, 1, //face front
             0, 3, 2,
             2, 3, 4, //face top
@@ -62,7 +68,8 @@ public class SpringyMesh : MonoBehaviour
         };
 
 
-        for (int i = 0; i < triangles.Count; i += 3) {
+        for (int i = 0; i < triangles.Count; i += 3)
+        {
             int id1 = triangles[i];
             int id2 = triangles[i + 1];
             int id3 = triangles[i + 2];
@@ -73,53 +80,69 @@ public class SpringyMesh : MonoBehaviour
             Strut s1 = null;
             Strut s2 = null;
             Strut s3 = null;
-            foreach (Strut strut in struts) {
-                if (strut.IsSame(id1, id2)) {
+            foreach (Strut strut in struts)
+            {
+                if (strut.IsSame(id1, id2))
+                {
                     s1 = strut;
                 }
 
-                if (strut.IsSame(id2, id3)) {
+                if (strut.IsSame(id2, id3))
+                {
                     s2 = strut;
                 }
 
-                if (strut.IsSame(id3, id1)) {
+                if (strut.IsSame(id3, id1))
+                {
                     s3 = strut;
                 }
             }
 
 
-            if (s1 == null) {
-                s1 = new Strut(1, 1, vertices[id1], vertices[id2]) {
+            if (s1 == null)
+            {
+                s1 = new Strut(k, d, vertices[id1], vertices[id2])
+                {
                     f1 = face,
                     opposite1 = vertices[id3]
                 };
 
                 struts.Add(s1);
-            } else {
+            }
+            else
+            {
                 s1.f2 = face;
                 s1.opposite2 = vertices[id3];
             }
 
-            if (s2 == null) {
-                s2 = new Strut(1, 1, vertices[id2], vertices[id3]) {
+            if (s2 == null)
+            {
+                s2 = new Strut(k, d, vertices[id2], vertices[id3])
+                {
                     f1 = face,
                     opposite1 = vertices[id1]
                 };
 
                 struts.Add(s2);
-            } else {
+            }
+            else
+            {
                 s2.f2 = face;
                 s2.opposite2 = vertices[id1];
             }
 
-            if (s3 == null) {
-                s3 = new Strut(1, 1, vertices[id3], vertices[id1]) {
+            if (s3 == null)
+            {
+                s3 = new Strut(k, d, vertices[id3], vertices[id1])
+                {
                     f1 = face,
                     opposite1 = vertices[id2]
                 };
 
                 struts.Add(s3);
-            } else {
+            }
+            else
+            {
                 s3.f2 = face;
                 s3.opposite2 = vertices[id2];
             }
@@ -133,7 +156,45 @@ public class SpringyMesh : MonoBehaviour
 
     private void FixedUpdate()
     {
-         // throw new NotImplementedException();
+        // Loop over all of the particles, setting each particle’s force to the accumulation
+        // of all external forces acting directly on each particle, such as air drag, friction,
+        // or gravity
+        // gravity
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            vertices[i].AddForce(transform.InverseTransformVector(Physics.gravity * vertices[i].mass));
+        }
+
+        //float dd = 1.0f;
+        // air drag
+        // for (int i = 0; i < particles.Count; i++)
+        // {
+        //     particles[i].AddForce(- dd  * particles[i].Velocity);
+        // }
+
+        // wind
+        // float u = UnityEngine.Random.value;
+        // float v = UnityEngine.Random.value;
+        // for (int i = 0; i < particles.Count; i++)
+        // {
+        //     particles[i].AddForce(dd * (u * Vector3.right + v * Vector3.forward) * 4.0f);
+        // }
+
+
+        // Loop over all of the struts, adding each strut’s spring and damper forces to
+        // the forces acting on the two particles it is connected to
+        for (int i = 0; i < struts.Count; i++)
+        {
+            struts[i].ApplyForces();
+        }
+
+
+        // Loop over all of the particles, dividing the particle’s total applied force by its
+        // mass to obtain its acceleration
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            vertices[i].Tick(Time.fixedDeltaTime, transform);
+        }
     }
 
     protected virtual void Render()
@@ -141,8 +202,9 @@ public class SpringyMesh : MonoBehaviour
         mesh.Clear();
 
         List<Vector3> positions = new List<Vector3>();
-        foreach (var node in vertices) {
-            positions.Add(node.position);
+        foreach (var vertex in vertices)
+        {
+            positions.Add(vertex.Position);
         }
 
         mesh.vertices = positions.ToArray();
@@ -154,90 +216,23 @@ public class SpringyMesh : MonoBehaviour
         mesh.RecalculateBounds();
     }
 
-    private void OnDrawGizmos() 
+    private void OnDrawGizmos()
     {
-        if (vertices == null) {
+        if (vertices == null)
+        {
             return;
         }
 
         Gizmos.color = Color.green;
-        
-        for (int i = 0; i < vertices.Count; i++) {
-                Gizmos.DrawSphere(transform.TransformPoint(vertices[i].position), 0.05f);
-        }
-    }
 
-
-    public class Strut
-    {
-        public double k;
-        public double d;
-        public double l0;
-        public double kTheta;
-
-        public Vertex from;
-        public Vertex to;
-
-        public Face f1;
-        public Face f2;
-
-        public Vertex opposite1;
-        public Vertex opposite2;
-
-        public Strut(double k, double d, Vertex from, Vertex to)
+        for (int i = 0; i < vertices.Count; i++)
         {
-            this.k = k;
-            this.d = d;
-
-            this.from = from;
-            this.to = to;
-            
-            this.l0 = Vector3.Distance(from.position, to.position);
-            //TODO: fix
-            this.kTheta = 1;
-        }
-
-        public bool IsSame(int id1, int id2)
-        {
-            return (from.id == id1 && to.id == id2) || (@from.id == id2 && to.id == id1);
-        }
-    }
-
-    public class Face
-    {
-        public double angle1;
-        public double angle2;
-        public double angle3;
-
-        public Strut s1;
-        public Strut s2;
-        public Strut s3;
-
-        public Face(double angle1, double angle2, double angle3)
-        {
-            this.angle1 = angle1;
-            this.angle2 = angle2;
-            this.angle3 = angle3;
-        }
-    }
-
-    public class Vertex
-    {
-        public int id;
-
-        public Vector3 position;
-        public Vector3 velocity;
-        public Vector3 force;
-
-        public double mass;
-
-        public Vertex(Vector3 position, double mass)
-        {
-            this.position = position;
-            this.mass = mass;
-
-            this.force = Vector3.zero;
-            this.velocity = Vector3.zero;
+            if (vertices[i].isAtRestFlag) {
+                Gizmos.color = Color.green;
+            } else {
+                Gizmos.color = Color.red;
+            }
+            Gizmos.DrawSphere(transform.TransformPoint(vertices[i].Position), 0.05f);
         }
     }
 }
