@@ -18,10 +18,10 @@ using UnityEngine;
         public bool isAtRestFlag = false;
 
         // coefficient of restitution
-        private float c_r = 0.8f;
+        private float c_r = 0.6f;
         
         // coefficient of friction
-        private float c_f = 0.1f;
+        private float c_f = 0.2f;
 
         public Vertex(Vector3 position, float mass)
         {

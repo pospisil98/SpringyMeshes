@@ -35,60 +35,68 @@ public class SpringyMesh : MonoBehaviour
 
 
 
-        float mass = 1.0f;
-        // int vertexCount = 8;
-        int vertexCount = 4;
+        float mass = 10.0f;
+        
+        // tohle je pro tetrahedronek: 
+        // int vertexCount = 4;
+        // float T = 0.5f;
+        // float P = 0.25f;        
+        
+        // tohle je pro krylicku:
+        int vertexCount = 8;
         float T = 5.0f;
-        float P = 5.0f;
+        float P = 2.5f;
 
         float d = 2.0f * mass / T;
         float k = 4.0f * Mathf.PI * Mathf.PI * (mass / vertexCount) / (P * P);
-
-         
-         // vertices = new List<Vertex>
-         // {
-         //     new Vertex(new Vector3(0, 0, 0), mass / vertexCount),
-         //     new Vertex(new Vector3(1, 0, 0), mass / vertexCount),
-         //     new Vertex(new Vector3(1, 1, 0), mass / vertexCount),
-         //     new Vertex(new Vector3(0, 1, 0), mass / vertexCount),
-         //     new Vertex(new Vector3(0, 1, 1), mass / vertexCount),
-         //     new Vertex(new Vector3(1, 1, 1), mass / vertexCount),
-         //     new Vertex(new Vector3(1, 0, 1), mass / vertexCount),
-         //     new Vertex(new Vector3(0, 0, 1), mass / vertexCount),
-         // };
-         //
-         // triangles = new List<int>
-         // {
-         //     0, 2, 1, //face front
-         //     0, 3, 2,
-         //     2, 3, 4, //face top
-         //     2, 4, 5,
-         //     1, 2, 5, //face right
-         //     1, 5, 6,
-         //     0, 7, 4, //face left
-         //     0, 4, 3,
-         //     5, 4, 7, //face back
-         //     5, 7, 6,
-         //     0, 6, 7, //face bottom
-         //     0, 1, 6
-         // };
-         
-
-        vertices = new List<Vertex>
-        {
-            new Vertex(new Vector3(0, 0, 0), mass / vertexCount),
-            new Vertex(new Vector3(1, 0, 0), mass / vertexCount),
-            new Vertex(new Vector3(0, 0, 1), mass / vertexCount),
-            new Vertex(new Vector3(0, 1, 0), mass / vertexCount),
-        };
         
-        triangles = new List<int>
-        {
-            0, 1, 2, // floor
-            0, 3, 1, // XY
-            0, 2, 3, // ZY
-            1, 3, 2  
-        };
+        Debug.Log(k + " " + d);
+
+         // cube geometry
+         vertices = new List<Vertex>
+         {
+             new Vertex(new Vector3(0, 0, 0), mass / vertexCount),
+             new Vertex(new Vector3(1, 0, 0), mass / vertexCount),
+             new Vertex(new Vector3(1, 1, 0), mass / vertexCount),
+             new Vertex(new Vector3(0, 1, 0), mass / vertexCount),
+             new Vertex(new Vector3(0, 1, 1), mass / vertexCount),
+             new Vertex(new Vector3(1, 1, 1), mass / vertexCount),
+             new Vertex(new Vector3(1, 0, 1), mass / vertexCount),
+             new Vertex(new Vector3(0, 0, 1), mass / vertexCount),
+         };
+         
+         triangles = new List<int>
+         {
+             0, 2, 1, // f1 //face front
+             0, 3, 2, // f2
+             2, 3, 4, // f3 //face top
+             2, 4, 5, // f4
+             1, 2, 5, // f5 //face right
+             1, 5, 6, // f6
+             0, 7, 4, // f7 //face left
+             0, 4, 3, // f8
+             5, 4, 7, // f9 //face back
+             5, 7, 6, // f10
+             0, 6, 7, // f11 //face bottom
+             0, 1, 6  // f12
+         };
+         
+        // tetrahedron geometry
+        // vertices = new List<Vertex>
+        // {
+        //     new Vertex(new Vector3(0, 0, 0), mass / vertexCount),
+        //     new Vertex(new Vector3(1, 0, 0), mass / vertexCount),
+        //     new Vertex(new Vector3(0, 0, 1), mass / vertexCount),
+        //     new Vertex(new Vector3(0, 1, 0), mass / vertexCount),
+        // };
+        //
+        // triangles = new List<int>
+        // {
+        //     0, 1, 2, // floor
+        //     0, 3, 1, // XY
+        //     0, 2, 3, // ZY
+        //     1, 3, 2  
+        // };
         
         
         for (int i = 0; i < vertices.Count; i++)
@@ -196,20 +204,20 @@ public class SpringyMesh : MonoBehaviour
         {
             vertices[i].AddForce(transform.InverseTransformVector(Physics.gravity * vertices[i].mass));
         }
-
-        //float dd = 1.0f;
-        // air drag
-        // for (int i = 0; i < particles.Count; i++)
+        
+        // float dd = 0.1f;
+        // //air drag
+        // for (int i = 0; i < vertices.Count; i++)
         // {
-        //     particles[i].AddForce(- dd  * particles[i].Velocity);
+        //     vertices[i].AddForce(- dd  * vertices[i].Velocity);
         // }
 
-        // wind
+        //wind
         // float u = UnityEngine.Random.value;
         // float v = UnityEngine.Random.value;
-        // for (int i = 0; i < particles.Count; i++)
+        // for (int i = 0; i < vertices.Count; i++)
         // {
-        //     particles[i].AddForce(dd * (u * Vector3.right + v * Vector3.forward) * 4.0f);
+        //     vertices[i].AddForce(dd * (u * Vector3.right + v * Vector3.forward) * 4.0f);
         // }
 
         for (int i = 0; i < faces.Count; i++)

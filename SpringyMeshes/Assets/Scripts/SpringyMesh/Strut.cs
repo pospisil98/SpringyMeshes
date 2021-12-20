@@ -39,8 +39,8 @@ public class Strut
     {
         this.restAngle = Vector3.Angle(face1.normal, face2.normal);
         
-        float Ttheta = 0.101f;
-        float Ptheta = 0.501f;
+        float Ttheta = 10.5f;
+        float Ptheta = 40.8f;
         Vector3 h = (to.Position - from.Position).normalized;
         Vector3 x02 = opposite1.Position - from.Position;
         Vector3 x03 = opposite2.Position - from.Position;
@@ -57,10 +57,10 @@ public class Strut
         
         dTheta = 2.0f * avgMass * avgDist / Ttheta;
         kTheta = 4.0f * Mathf.PI * Mathf.PI * avgDist * avgDist * avgMass / (Ptheta * Ptheta);        
+        // Debug.Log(dTheta + " " + kTheta);
+        // tyhle jsou fajn
         // dTheta = 0.2f;
         // kTheta = 0.1f;
-        dTheta = 0.4f;
-        kTheta = 0.1f;
 
     }
 
@@ -106,10 +106,10 @@ public class Strut
 
         Vector3 tau_k = kTheta * (theta - restAngle) * h;
 
-        float theta_l = Vector3.Dot(opposite1.Velocity, n_l) / Vector3.Magnitude(r_l);
-        float theta_r = Vector3.Dot(opposite2.Velocity, n_r) / Vector3.Magnitude(r_r);        
-        // float theta_l = Mathf.Abs(Vector3.Dot(opposite1.Velocity, n_l) / Vector3.Magnitude(r_l));
-        // float theta_r = Mathf.Abs(Vector3.Dot(opposite2.Velocity, n_r) / Vector3.Magnitude(r_r));
+        // float theta_l = Vector3.Dot(opposite1.Velocity, n_l) / Vector3.Magnitude(r_l);
+        // float theta_r = Vector3.Dot(opposite2.Velocity, n_r) / Vector3.Magnitude(r_r);        
+        float theta_l = Vector3.Angle(Vector3.Dot(opposite1.Velocity, n_l) * n_l + r_l, r_l);
+        float theta_r = Vector3.Angle(Vector3.Dot(opposite2.Velocity, n_r) * n_r + r_r, r_r);
 
         Vector3 tau_d = -dTheta * (theta_l + theta_r) * h;
 
