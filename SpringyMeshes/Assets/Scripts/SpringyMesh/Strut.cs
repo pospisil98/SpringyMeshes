@@ -40,7 +40,7 @@ public class Strut
         this.restAngle = Vector3.Angle(face1.normal, face2.normal);
         
         float Ttheta = 10.5f;
-        float Ptheta = 40.8f;
+        float Ptheta = 80.8f;
         Vector3 h = (to.Position - from.Position).normalized;
         Vector3 x02 = opposite1.Position - from.Position;
         Vector3 x03 = opposite2.Position - from.Position;
@@ -61,6 +61,10 @@ public class Strut
         // tyhle jsou fajn
         // dTheta = 0.2f;
         // kTheta = 0.1f;
+        k = 25.0f;
+        d = 8.0f;
+        kTheta = 0.04f;
+        dTheta = 0.5f;
 
     }
 
@@ -108,9 +112,25 @@ public class Strut
 
         // float theta_l = Vector3.Dot(opposite1.Velocity, n_l) / Vector3.Magnitude(r_l);
         // float theta_r = Vector3.Dot(opposite2.Velocity, n_r) / Vector3.Magnitude(r_r);        
-        float theta_l = Vector3.Angle(Vector3.Dot(opposite1.Velocity, n_l) * n_l + r_l, r_l);
-        float theta_r = Vector3.Angle(Vector3.Dot(opposite2.Velocity, n_r) * n_r + r_r, r_r);
+        // float theta_l = Vector3.Angle(Vector3.Dot(opposite1.Velocity, n_l) * n_l + r_l, r_l);
+        // float theta_r = Vector3.Angle(Vector3.Dot(opposite2.Velocity, n_r) * n_r + r_r, r_r);
 
+        // test
+        Vector3 hinge_velocity_left;
+        Vector3 hinge_velocity_right;
+        float d02 = Vector3.Dot(x02, h);
+        float d03 = Vector3.Dot(x03, h);
+        float l01 = (to.Position - from.Position).magnitude;
+        float fraction_vel_left = d02 / l01;
+        float fraction_vel_right = d03 / l01;
+
+        hinge_velocity_left = ((1.0f - fraction_vel_left) * from.Velocity) + (fraction_vel_left * to.Velocity);
+        hinge_velocity_right = ((1.0f - fraction_vel_right) * from.Velocity) + (fraction_vel_right * to.Velocity);
+        float theta_l = Vector3.Dot(opposite1.Velocity - hinge_velocity_left, n_l) / r_l.magnitude;
+        float theta_r = Vector3.Dot(opposite2.Velocity - hinge_velocity_right, n_r) / r_r.magnitude;
+        
+        // test
+        
         Vector3 tau_d = -dTheta * (theta_l + theta_r) * h;
 
         Vector3 tau = tau_k + tau_d;
@@ -118,8 +138,8 @@ public class Strut
         Vector3 f2 = n_l * Vector3.Dot(tau, h) / Vector3.Magnitude(r_l);
         Vector3 f3 = n_r * Vector3.Dot(tau, h) / Vector3.Magnitude(r_r);
 
-        float d02 = Vector3.Dot(x02, h);
-        float d03 = Vector3.Dot(x03, h);
+        // float d02 = Vector3.Dot(x02, h);
+        // float d03 = Vector3.Dot(x03, h);
         
         Vector3 f1 = -(d02 * f2 + d03 * f3)/ Vector3.Magnitude(to.Position - from.Position);
         Vector3 f0 = -(f1 + f2 + f3);

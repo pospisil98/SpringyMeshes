@@ -50,7 +50,7 @@ public class SpringyMesh : MonoBehaviour
         float d = 2.0f * mass / T;
         float k = 4.0f * Mathf.PI * Mathf.PI * (mass / vertexCount) / (P * P);
         
-        Debug.Log(k + " " + d);
+        // Debug.Log(k + " " + d);
 
          // cube geometry
          vertices = new List<Vertex>
@@ -239,7 +239,9 @@ public class SpringyMesh : MonoBehaviour
         for (int i = 0; i < vertices.Count; i++)
         {
             vertices[i].Tick(Time.fixedDeltaTime, transform);
+            
         }
+        Render();
     }
 
     protected virtual void Render()
