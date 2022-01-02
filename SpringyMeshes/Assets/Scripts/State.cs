@@ -31,8 +31,19 @@ public class State
 
     public void Integrate(Vector3 acceleration, float deltaTime)
     {
+        // Euler
+        // Vector3 prevVelocity = velocity;
+        // velocity = velocity + acceleration * deltaTime;
+        // position = position + (prevVelocity + velocity) * 0.5f * deltaTime;
+        
+        // Leap frog
         Vector3 prevVelocity = velocity;
-        velocity = velocity + acceleration * deltaTime;
-        position = position + (prevVelocity + velocity) * 0.5f * deltaTime;
+        
+        Vector3 newPosition = position + prevVelocity * deltaTime * 0.5f;
+        Vector3 newVelocity = prevVelocity + acceleration * deltaTime;
+        newPosition = newPosition + prevVelocity * deltaTime * 0.5f;
+
+        velocity = newVelocity;
+        position = newPosition;
     }
 }

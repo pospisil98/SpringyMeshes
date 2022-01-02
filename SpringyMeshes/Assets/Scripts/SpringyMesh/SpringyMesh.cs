@@ -35,7 +35,7 @@ public class SpringyMesh : MonoBehaviour
 
 
 
-        float mass = 10.0f;
+        float mass = 4.0f;
         
         // tohle je pro tetrahedronek: 
         // int vertexCount = 4;

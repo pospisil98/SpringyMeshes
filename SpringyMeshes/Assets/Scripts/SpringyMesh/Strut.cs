@@ -59,12 +59,14 @@ public class Strut
         kTheta = 4.0f * Mathf.PI * Mathf.PI * avgDist * avgDist * avgMass / (Ptheta * Ptheta);        
         // Debug.Log(dTheta + " " + kTheta);
         // tyhle jsou fajn
-        // dTheta = 0.2f;
-        // kTheta = 0.1f;
         k = 25.0f;
         d = 8.0f;
-        kTheta = 0.04f;
-        dTheta = 0.5f;
+        kTheta = 0.04f * 8.0f;
+        dTheta = 0.4f * 10.0f;
+        // k = 50.0f;
+        // d = 3.0f;
+        // kTheta = 0.14f;
+        // dTheta = 0.008f;
 
     }
 
@@ -91,12 +93,12 @@ public class Strut
         
         // computation of hinge forces
 
-        Vector3 h = (to.Position - from.Position).normalized;
-        Vector3 x02 = opposite1.Position - from.Position;
-        Vector3 x03 = opposite2.Position - from.Position;
-        // Vector3 h = (from.Position - to.Position).normalized;
-        // Vector3 x02 = from.Position - opposite1.Position;
-        // Vector3 x03 = from.Position - opposite2.Position;
+        // Vector3 h = (to.Position - from.Position).normalized;
+        // Vector3 x02 = opposite1.Position - from.Position;
+        // Vector3 x03 = opposite2.Position - from.Position;
+        Vector3 h = (from.Position - to.Position).normalized;
+        Vector3 x02 = from.Position - opposite1.Position;
+        Vector3 x03 = from.Position - opposite2.Position;
         
         // vectors formed by lofting a perpendicular from the hinge edge
         Vector3 r_l = x02 - Vector3.Dot(x02, h) * h;
@@ -115,31 +117,27 @@ public class Strut
         // float theta_l = Vector3.Angle(Vector3.Dot(opposite1.Velocity, n_l) * n_l + r_l, r_l);
         // float theta_r = Vector3.Angle(Vector3.Dot(opposite2.Velocity, n_r) * n_r + r_r, r_r);
 
+        float d02 = Vector3.Dot(x02, h);
+        float d03 = Vector3.Dot(x03, h);
+        
         // test
         Vector3 hinge_velocity_left;
         Vector3 hinge_velocity_right;
-        float d02 = Vector3.Dot(x02, h);
-        float d03 = Vector3.Dot(x03, h);
         float l01 = (to.Position - from.Position).magnitude;
         float fraction_vel_left = d02 / l01;
         float fraction_vel_right = d03 / l01;
-
+        
         hinge_velocity_left = ((1.0f - fraction_vel_left) * from.Velocity) + (fraction_vel_left * to.Velocity);
         hinge_velocity_right = ((1.0f - fraction_vel_right) * from.Velocity) + (fraction_vel_right * to.Velocity);
         float theta_l = Vector3.Dot(opposite1.Velocity - hinge_velocity_left, n_l) / r_l.magnitude;
         float theta_r = Vector3.Dot(opposite2.Velocity - hinge_velocity_right, n_r) / r_r.magnitude;
-        
-        // test
-        
+
         Vector3 tau_d = -dTheta * (theta_l + theta_r) * h;
 
         Vector3 tau = tau_k + tau_d;
 
         Vector3 f2 = n_l * Vector3.Dot(tau, h) / Vector3.Magnitude(r_l);
         Vector3 f3 = n_r * Vector3.Dot(tau, h) / Vector3.Magnitude(r_r);
-
-        // float d02 = Vector3.Dot(x02, h);
-        // float d03 = Vector3.Dot(x03, h);
         
         Vector3 f1 = -(d02 * f2 + d03 * f3)/ Vector3.Magnitude(to.Position - from.Position);
         Vector3 f0 = -(f1 + f2 + f3);
