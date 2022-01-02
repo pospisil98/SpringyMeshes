@@ -7,7 +7,7 @@ public class Strut
     public int id;
     public float k;
     public float d;
-    private float restLength;
+    public float restLength;
     private float restAngle;
     public float kTheta;
     public float dTheta;
@@ -22,12 +22,9 @@ public class Strut
     public Vertex opposite2;
 
 
-    public Strut(int id, float k, float d, Vertex from, Vertex to)
+    public Strut(int id, Vertex from, Vertex to)
     {
         this.id = id;
-        
-        this.k = k;
-        this.d = d;
 
         this.from = from;
         this.to = to;
@@ -35,18 +32,31 @@ public class Strut
         this.restLength = Vector3.Distance(from.Position, to.Position);
     }
 
-    public void Preprocess()
-    {
+    public void Preprocess(float avgLength)
+    {        
+        float T = 5.0f;
+        float P = 5.0f;
+
+        d = 2.0f * from.mass / T;
+        k = 4.0f * Mathf.PI * Mathf.PI * from.mass / (P * P);
+
+        k = 50.0f;
+        d = 1.0f;
+        d *= restLength / avgLength;
+        k *= restLength / avgLength;
+        // kTheta = 10.0f;
+        // dTheta = 0.0f;
+        
         this.restAngle = Vector3.Angle(face1.normal, face2.normal);
         
-        float Ttheta = 10.5f;
-        float Ptheta = 80.8f;
+        // float Ttheta = 0.5f;
+        // float Ptheta = 10.0f;
+        float Ttheta = 0.1f;
+        float Ptheta = 10.0f;
         Vector3 h = (to.Position - from.Position).normalized;
         Vector3 x02 = opposite1.Position - from.Position;
         Vector3 x03 = opposite2.Position - from.Position;
-        // Vector3 h = (from.Position - to.Position).normalized;
-        // Vector3 x02 = from.Position - opposite1.Position;
-        // Vector3 x03 = from.Position - opposite2.Position;
+        
         Vector3 r_l = x02 - Vector3.Dot(x02, h) * h;
         Vector3 r_r = x03 - Vector3.Dot(x03, h) * h;
         float avgDist = 0.5f * (Vector3.Magnitude(r_l) + Vector3.Magnitude(r_r));
@@ -57,16 +67,20 @@ public class Strut
         
         dTheta = 2.0f * avgMass * avgDist / Ttheta;
         kTheta = 4.0f * Mathf.PI * Mathf.PI * avgDist * avgDist * avgMass / (Ptheta * Ptheta);        
-        // Debug.Log(dTheta + " " + kTheta);
+        Debug.Log(dTheta + " " + kTheta);
         // tyhle jsou fajn
-        k = 25.0f;
-        d = 8.0f;
-        kTheta = 0.04f * 8.0f;
-        dTheta = 0.4f * 10.0f;
+        // k = 25.0f;
+        // d = 8.0f;
+        // kTheta = 0.04f * 8.0f;
+        // dTheta = 0.4f * 10.0f;        
+        // k = 0.0f;
+        // d = 0.0f;
+        // kTheta = 0.0f;
+        // dTheta = 0.0f;
         // k = 50.0f;
         // d = 3.0f;
-        // kTheta = 0.14f;
-        // dTheta = 0.008f;
+        // kTheta = 200.02f;
+        // dTheta = 10.0f;
 
     }
 
@@ -93,10 +107,10 @@ public class Strut
         
         // computation of hinge forces
 
-        // Vector3 h = (to.Position - from.Position).normalized;
+        Vector3 h = (to.Position - from.Position).normalized;
         // Vector3 x02 = opposite1.Position - from.Position;
         // Vector3 x03 = opposite2.Position - from.Position;
-        Vector3 h = (from.Position - to.Position).normalized;
+        // Vector3 h = (from.Position - to.Position).normalized;
         Vector3 x02 = from.Position - opposite1.Position;
         Vector3 x03 = from.Position - opposite2.Position;
         
@@ -139,7 +153,7 @@ public class Strut
         Vector3 f2 = n_l * Vector3.Dot(tau, h) / Vector3.Magnitude(r_l);
         Vector3 f3 = n_r * Vector3.Dot(tau, h) / Vector3.Magnitude(r_r);
         
-        Vector3 f1 = -(d02 * f2 + d03 * f3)/ Vector3.Magnitude(to.Position - from.Position);
+        Vector3 f1 = -(d02 * f2 + d03 * f3) / Vector3.Magnitude(to.Position - from.Position);
         Vector3 f0 = -(f1 + f2 + f3);
         
         // Debug.Log(id + " theta l, r: " + theta_l + " " + theta_r);

@@ -35,7 +35,7 @@ public class SpringyMesh : MonoBehaviour
 
 
 
-        float mass = 4.0f;
+        float mass = 1.0f;
         
         // tohle je pro tetrahedronek: 
         // int vertexCount = 4;
@@ -44,41 +44,39 @@ public class SpringyMesh : MonoBehaviour
         
         // tohle je pro krylicku:
         int vertexCount = 8;
-        float T = 5.0f;
-        float P = 2.5f;
 
-        float d = 2.0f * mass / T;
-        float k = 4.0f * Mathf.PI * Mathf.PI * (mass / vertexCount) / (P * P);
         
         // Debug.Log(k + " " + d);
+
+        float size = 4.0f;
 
          // cube geometry
          vertices = new List<Vertex>
          {
              new Vertex(new Vector3(0, 0, 0), mass / vertexCount),
-             new Vertex(new Vector3(1, 0, 0), mass / vertexCount),
-             new Vertex(new Vector3(1, 1, 0), mass / vertexCount),
-             new Vertex(new Vector3(0, 1, 0), mass / vertexCount),
-             new Vertex(new Vector3(0, 1, 1), mass / vertexCount),
-             new Vertex(new Vector3(1, 1, 1), mass / vertexCount),
-             new Vertex(new Vector3(1, 0, 1), mass / vertexCount),
-             new Vertex(new Vector3(0, 0, 1), mass / vertexCount),
+             new Vertex(new Vector3(size, 0, 0), mass / vertexCount),
+             new Vertex(new Vector3(size, size, 0), mass / vertexCount),
+             new Vertex(new Vector3(0, size, 0), mass / vertexCount),
+             new Vertex(new Vector3(0, size, size), mass / vertexCount),
+             new Vertex(new Vector3(size, size, size), mass / vertexCount),
+             new Vertex(new Vector3(size, 0, size), mass / vertexCount),
+             new Vertex(new Vector3(0, 0, size), mass / vertexCount),
          };
          
          triangles = new List<int>
          {
-             0, 2, 1, // f1 //face front
-             0, 3, 2, // f2
-             2, 3, 4, // f3 //face top
-             2, 4, 5, // f4
-             1, 2, 5, // f5 //face right
-             1, 5, 6, // f6
-             0, 7, 4, // f7 //face left
-             0, 4, 3, // f8
-             5, 4, 7, // f9 //face back
-             5, 7, 6, // f10
-             0, 6, 7, // f11 //face bottom
-             0, 1, 6  // f12
+             0, 2, 1, // f0
+             0, 3, 2, // f1
+             2, 3, 4, // f2
+             2, 4, 5, // f3
+             1, 2, 5, // f4
+             1, 5, 6, // f5
+             0, 7, 3, // f6 
+             7, 4, 3, // f7
+             6, 4, 7, // f8 
+             5, 4, 6, // f9
+             0, 6, 7, // f10 
+             0, 1, 6  // f11
          };
          
         // tetrahedron geometry
@@ -138,7 +136,7 @@ public class SpringyMesh : MonoBehaviour
 
             if (s1 == null)
             {
-                s1 = new Strut(strutId++, k, d, vertices[id1], vertices[id2])
+                s1 = new Strut(strutId++,vertices[id1], vertices[id2])
                 {
                     face2 = face,
                     opposite2 = vertices[id3]
@@ -150,12 +148,11 @@ public class SpringyMesh : MonoBehaviour
             {
                 s1.face1 = face;
                 s1.opposite1 = vertices[id3];
-                s1.Preprocess();
             }
 
             if (s2 == null)
             {
-                s2 = new Strut(strutId++, k, d, vertices[id2], vertices[id3])
+                s2 = new Strut(strutId++,vertices[id2], vertices[id3])
                 {
                     face2 = face,
                     opposite2 = vertices[id1]
@@ -167,12 +164,11 @@ public class SpringyMesh : MonoBehaviour
             {
                 s2.face1 = face;
                 s2.opposite1 = vertices[id1];
-                s2.Preprocess();
             }
 
             if (s3 == null)
             {
-                s3 = new Strut(strutId++, k, d, vertices[id3], vertices[id1])
+                s3 = new Strut(strutId++, vertices[id3], vertices[id1])
                 {
                     face2 = face,
                     opposite2 = vertices[id2]
@@ -184,8 +180,20 @@ public class SpringyMesh : MonoBehaviour
             {
                 s3.face1 = face;
                 s3.opposite1 = vertices[id2];
-                s3.Preprocess();
             }
+        }
+
+        float avgLength = 0.0f;
+        foreach (var strut in struts)
+        {
+            avgLength += strut.restLength;
+        }
+
+        avgLength /= struts.Count;
+
+        for (int i = 0; i < struts.Count; i++)
+        {
+            struts[i].Preprocess(avgLength);
         }
     }
 

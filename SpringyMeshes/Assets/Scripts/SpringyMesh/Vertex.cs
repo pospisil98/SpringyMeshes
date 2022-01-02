@@ -86,6 +86,7 @@ using UnityEngine;
 
         bool isResting(Transform transform)
         {
+            return false;
             if (state.velocity.magnitude < epsilon)
             {
                 //Debug.Log("Node Velocity under epsilon");
