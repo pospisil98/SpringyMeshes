@@ -18,10 +18,10 @@ using UnityEngine;
         public bool isAtRestFlag = false;
 
         // coefficient of restitution
-        private float c_r = 0.6f;
+        private float c_r = 0.9f;
         
         // coefficient of friction
-        private float c_f = 0.2f;
+        private float c_f = 0.1f;
 
         public Vertex(Vector3 position, float mass)
         {
@@ -29,6 +29,14 @@ using UnityEngine;
             state = new State(Vector3.zero, position, Vector3.zero);
             // TODO: this representation of the plane is temporary
             plane = new Plane(Vector3.zero, Vector3.up);
+        }
+        
+        public Vertex(Vector3 position, float mass, Plane plane)
+        {
+            this.mass = mass;
+            state = new State(Vector3.zero, position, Vector3.zero);
+            // TODO: this representation of the plane is temporary
+            this.plane = plane;
         }
 
         public void Tick(float deltaTime, Transform transform)

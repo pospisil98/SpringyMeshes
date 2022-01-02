@@ -7,6 +7,9 @@ public class SpringyMeshIcoSphere : MonoBehaviour
 {
     public int subdivisions;
     public float radius;
+
+    public GameObject planeObject;
+    private Plane plane;
     
     private List<Strut> struts;
     private List<Face> faces;
@@ -21,10 +24,12 @@ public class SpringyMeshIcoSphere : MonoBehaviour
     
     public Material mat;
     
-    float mass = 1.0f;
+    float mass = 10.0f;
 
     private void Awake()
     {
+        plane = new Plane(planeObject.transform.position, planeObject.transform.up);
+        
         meshRenderer = gameObject.AddComponent<MeshRenderer>();
         meshRenderer.sharedMaterial = mat;
 
@@ -50,7 +55,7 @@ public class SpringyMeshIcoSphere : MonoBehaviour
             
             
             if (!isNodeClose) {
-                vertices.Add(new Vertex(originalVertices[index], mass));
+                vertices.Add(new Vertex(originalVertices[index], mass, plane));
                 vertexIndexHelper.Add(new VertexHelper(originalVertices[index], index, vertices.Count - 1));
             } else {
                 //Debug.Log("Duplicate of node!");

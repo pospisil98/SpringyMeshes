@@ -40,12 +40,11 @@ public class Strut
         d = 2.0f * from.mass / T;
         k = 4.0f * Mathf.PI * Mathf.PI * from.mass / (P * P);
 
+        // k = 50.0f;
         k = 50.0f;
-        d = 1.0f;
+        d = 3.0f;
         d *= restLength / avgLength;
         k *= restLength / avgLength;
-        // kTheta = 10.0f;
-        // dTheta = 0.0f;
         Vector3 h = (to.Position - from.Position).normalized;
         
         // this.restAngle = Vector3.Angle(face1.normal, face2.normal);
