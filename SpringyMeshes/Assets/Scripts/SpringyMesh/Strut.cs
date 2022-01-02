@@ -46,14 +46,15 @@ public class Strut
         k *= restLength / avgLength;
         // kTheta = 10.0f;
         // dTheta = 0.0f;
+        Vector3 h = (to.Position - from.Position).normalized;
         
-        this.restAngle = Vector3.Angle(face1.normal, face2.normal);
+        // this.restAngle = Vector3.Angle(face1.normal, face2.normal);
+        this.restAngle = Mathf.Atan2(Vector3.Dot(Vector3.Cross(face1.normal, face2.normal), h), Vector3.Dot(face1.normal, face2.normal));
         
         // float Ttheta = 0.5f;
         // float Ptheta = 10.0f;
         float Ttheta = 0.1f;
         float Ptheta = 10.0f;
-        Vector3 h = (to.Position - from.Position).normalized;
         Vector3 x02 = opposite1.Position - from.Position;
         Vector3 x03 = opposite2.Position - from.Position;
         
@@ -121,8 +122,8 @@ public class Strut
         Vector3 n_l = face1.normal;
         Vector3 n_r = face2.normal;
 
-        // float theta = Mathf.Atan2(Vector3.Dot(Vector3.Cross(n_l, n_r), h), Vector3.Dot(n_l, n_r));
-        float theta = Vector3.Angle(n_l, n_r);
+        float theta = Mathf.Atan2(Vector3.Dot(Vector3.Cross(n_l, n_r), h), Vector3.Dot(n_l, n_r));
+        // float theta = Vector3.Angle(n_l, n_r);
 
         Vector3 tau_k = kTheta * (theta - restAngle) * h;
 
