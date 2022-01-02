@@ -34,15 +34,15 @@ public class Strut
 
     public void Preprocess(float avgLength)
     {        
-        float T = 5.0f;
-        float P = 5.0f;
+        float P = 0.2f;
+        float T = 0.1f;
 
-        d = 2.0f * from.mass / T;
         k = 4.0f * Mathf.PI * Mathf.PI * from.mass / (P * P);
+        d = 2.0f * from.mass / T;
 
         // k = 50.0f;
-        k = 50.0f;
-        d = 3.0f;
+        // k = 50.0f;
+        // d = 3.0f;
         d *= restLength / avgLength;
         k *= restLength / avgLength;
         Vector3 h = (to.Position - from.Position).normalized;
@@ -67,7 +67,8 @@ public class Strut
         
         dTheta = 2.0f * avgMass * avgDist / Ttheta;
         kTheta = 4.0f * Mathf.PI * Mathf.PI * avgDist * avgDist * avgMass / (Ptheta * Ptheta);        
-        Debug.Log(dTheta + " " + kTheta);
+        Debug.Log(k + " " + d);       
+        // Debug.Log(kTheta + " " + dTheta);
         // tyhle jsou fajn
         // k = 25.0f;
         // d = 8.0f;
