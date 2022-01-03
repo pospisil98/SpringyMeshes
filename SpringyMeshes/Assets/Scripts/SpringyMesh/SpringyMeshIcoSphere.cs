@@ -190,6 +190,33 @@ public class SpringyMeshIcoSphere : MonoBehaviour
     private void Update()
     {
         Render();
+        
+        // User input
+        float acceleration = 100.0f;
+        if(Input.GetKey(KeyCode.W)){
+            Debug.Log("W");
+            for (int i = 0; i < vertices.Count; i++) {
+                vertices[i].AddForce(transform.InverseTransformVector(acceleration * Vector3.forward * vertices[i].mass));
+            }
+        }
+        if(Input.GetKey(KeyCode.S)){
+            Debug.Log("S");
+            for (int i = 0; i < vertices.Count; i++) {
+                vertices[i].AddForce(transform.InverseTransformVector( - acceleration * Vector3.forward * vertices[i].mass));
+            }
+        }
+        if(Input.GetKey(KeyCode.D)){
+            Debug.Log("D");
+            for (int i = 0; i < vertices.Count; i++) {
+                vertices[i].AddForce(transform.InverseTransformVector(acceleration * Vector3.right * vertices[i].mass));
+            }
+        }
+        if(Input.GetKey(KeyCode.A)){
+            Debug.Log("A");
+            for (int i = 0; i < vertices.Count; i++) {
+                vertices[i].AddForce(transform.InverseTransformVector(-acceleration * Vector3.right * vertices[i].mass));
+            }
+        }
     }
 
     private void FixedUpdate()
