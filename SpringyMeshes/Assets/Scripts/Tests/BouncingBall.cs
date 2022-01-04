@@ -13,7 +13,7 @@ public class BouncingBall : MonoBehaviour
     
     public State state;
     public Vector3 windVelocity = Vector3.zero;
-    public float airResistance = 0.4f; // air resistance constant
+    public float airResistance = 0.0f; // air resistance constant
     public float c_r = 1.0f;
     public float c_f = 0.0f;
 
@@ -39,7 +39,7 @@ public class BouncingBall : MonoBehaviour
     {
         
         // User input
-        float acceleration = 5.0f;
+        float acceleration = 50.0f;
         if(Input.GetKey(KeyCode.W)){
             Debug.Log("W");
             force+= acceleration * Vector3.forward * mass;
