@@ -33,17 +33,15 @@ public class Strut
     }
 
     public void Preprocess(float avgLength)
-    {        
-        float P = 0.2f;
+    {  
         float T = 0.1f;
+        float P = 0.08f;
 
         k = 4.0f * Mathf.PI * Mathf.PI * from.mass / (P * P);
         d = 2.0f * from.mass / T;
 
-        // k = 50.0f;
-        // d = 3.0f;
-        k = 1150.0f;
-        d = 3.0f;
+        //k = 950.0f;
+        //d = 3.5f;
         d *= restLength / avgLength;
         k *= restLength / avgLength;
         Vector3 h = (to.Position - from.Position).normalized;
@@ -53,12 +51,15 @@ public class Strut
         
         // float Ttheta = 0.5f;
         // float Ptheta = 10.0f;
-        float Ttheta = 0.5f;
-        float Ptheta = 8.0f;
+        float Ttheta = 3.0f;
+        float Ptheta = 6.0f;
         
+        // Karlovo
         Vector3 x02 = from.Position - opposite1.Position;
         Vector3 x03 = from.Position - opposite2.Position;
-        
+        //Vector3 x02 = opposite1.Position - from.Position;
+        //Vector3 x03 = opposite2.Position - from.Position;
+
         Vector3 r_l = x02 - Vector3.Dot(x02, h) * h;
         Vector3 r_r = x03 - Vector3.Dot(x03, h) * h;
         float avgDist = 0.5f * (Vector3.Magnitude(r_l) + Vector3.Magnitude(r_r));
@@ -66,16 +67,16 @@ public class Strut
         float mass1 = opposite1.mass;
         float mass2 = opposite2.mass;
         float avgMass = 0.5f * (mass1 + mass2);
+       
+        dTheta = 2.0f * avgMass * avgDist / Ttheta;    
+        kTheta = 4.0f * Mathf.PI * Mathf.PI * avgDist * avgDist * avgMass / (Ptheta * Ptheta);   
         
-        dTheta = 2.0f * avgMass * avgDist / Ttheta;
-        kTheta = 4.0f * Mathf.PI * Mathf.PI * avgDist * avgDist * avgMass / (Ptheta * Ptheta);        
-        Debug.Log(k + " " + d);       
-        // Debug.Log(kTheta + " " + dTheta);
+        Debug.Log( "Kt, Dt: " + kTheta+ "    " + dTheta);
         // tyhle jsou fajn
         // k = 25.0f;
         // d = 8.0f;
         // kTheta = 0.04f * 8.0f;
-        // dTheta = 0.4f * 10.0f;        
+        // dTheta = 0.4f * 10.0f;
         // k = 0.0f;
         // d = 0.0f;
         // kTheta = 2.0f;
@@ -89,7 +90,7 @@ public class Strut
 
     public bool IsSame(int id1, int id2)
     {
-        return (from.id == id1 && to.id == id2) || (@from.id == id2 && to.id == id1);
+        return (from.id == id1 && to.id == id2) || (from.id == id2 && to.id == id1);
     }
 
     public void ApplyForces()
@@ -109,11 +110,11 @@ public class Strut
         to.AddForce(-f_d);
         
         // computation of hinge forces
-
+        //Vector3 x02 = opposite1.Position - from.Position;
+        //Vector3 x03 = opposite2.Position - from.Position;
+        //Vector3 h = (from.Position - to.Position).normalized;
+        
         Vector3 h = (to.Position - from.Position).normalized;
-        // Vector3 x02 = opposite1.Position - from.Position;
-        // Vector3 x03 = opposite2.Position - from.Position;
-        // Vector3 h = (from.Position - to.Position).normalized;
         Vector3 x02 = from.Position - opposite1.Position;
         Vector3 x03 = from.Position - opposite2.Position;
         

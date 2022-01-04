@@ -21,7 +21,7 @@ using UnityEngine;
         private float c_r = 0.9f;
         
         // coefficient of friction
-        private float c_f = 0.3f;
+        private float c_f = 0.9f;
 
         public Vertex(Vector3 position, float mass)
         {

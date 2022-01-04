@@ -10,6 +10,8 @@ public class Face
     public float angle2;
     public float angle3;
 
+    public float area;
+
     public Vector3 normal;
 
     public Vertex v1;
@@ -23,6 +25,8 @@ public class Face
         this.v2 = v2;
         this.v3 = v3;
         Update();
+
+        area = AreaOfTriangle(v1.Position, v2.Position, v3.Position);
     }
 
     public void Update()
@@ -32,5 +36,20 @@ public class Face
         angle3 = Vector3.Angle(v2.Position - v3.Position, v1.Position - v3.Position);
         
         normal =  Vector3.Cross( v2.Position - v1.Position,v3.Position - v1.Position).normalized;
+    }
+
+    public float GetAngleByVertex(Vertex v)
+    {
+        if (v == v1) { return angle1; }
+        if (v == v2) { return angle2; }
+        if (v == v3) { return angle3; }
+        
+        Debug.LogError("AJAJA");
+        return -1;
+    }
+
+    private float AreaOfTriangle(Vector3 a, Vector3 b, Vector3 c)
+    {
+        return 0.5f * Vector3.Cross(b-a, c-a).magnitude;
     }
 }
