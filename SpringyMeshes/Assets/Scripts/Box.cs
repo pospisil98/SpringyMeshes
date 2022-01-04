@@ -23,41 +23,41 @@ public class Box : MonoBehaviour
         meshFilter = gameObject.AddComponent<MeshFilter>();
         mesh = meshFilter.mesh;
         
-        vertices = new List<Vector3>
-        {
-            new Vector3(0, 0, 0),
-            new Vector3(0, 0, 1),
-            new Vector3(1, 0, 0),
-        };
-        
-        
-        triangleIndices = new List<int>
-        {
-            0, 1, 2,
-        };
-        
         // vertices = new List<Vector3>
         // {
-        //     new Vector3(-1, 0.5f, 0),
-        //     new Vector3(-1, 0.5f,    1),
         //     new Vector3(0, 0, 0),
         //     new Vector3(0, 0, 1),
         //     new Vector3(1, 0, 0),
-        //     new Vector3(1, 0, 1),
-        //     new Vector3(2, -0.5f, 0),
-        //     new Vector3(2, -0.5f, 1),
         // };
         //
         //
         // triangleIndices = new List<int>
         // {
         //     0, 1, 2,
-        //     2, 1, 3,
-        //     4, 2, 3,
-        //     4, 3, 5,
-        //     6, 4, 5,
-        //     6, 5, 7,
         // };
+        
+        vertices = new List<Vector3>
+        {
+            new Vector3(-1, 0.5f, 0),
+            new Vector3(-1, 0.5f, 1),
+            new Vector3(0, 0, 0),
+            new Vector3(0, 0, 1),
+            new Vector3(1, 0, 0),
+            new Vector3(1, 0, 1),
+            new Vector3(2, -0.5f, 0),
+            new Vector3(2, -0.5f, 1),
+        };
+        
+        
+        triangleIndices = new List<int>
+        {
+            0, 1, 2,
+            2, 1, 3,
+            4, 2, 3,
+            4, 3, 5,
+            6, 4, 5,
+            6, 5, 7,
+        };
         
         // vertices = new List<Vector3>
         // {
@@ -123,8 +123,9 @@ public class Box : MonoBehaviour
             triangles.Add(new Triangle(
                 transform.TransformPoint(vertices[triangleIndices[i]]), 
                 transform.TransformPoint(vertices[triangleIndices[i + 1]]), 
-                transform.TransformPoint(vertices[triangleIndices[i + 2]])
-                ));
+                transform.TransformPoint(vertices[triangleIndices[i + 2]]),
+                i / 3
+            ));
         }
     }
     

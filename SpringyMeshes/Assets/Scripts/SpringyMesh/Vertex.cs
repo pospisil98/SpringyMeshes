@@ -11,7 +11,7 @@ using UnityEngine;
         
         private Plane plane;
 
-        private bool isFixed = false;
+        public bool isFixed = false;
 
         private const float epsilon = 0.05f;
 

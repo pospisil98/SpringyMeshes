@@ -10,35 +10,42 @@ public class Triangle
     public Vector3 b;
     public Vector3 c;
     public Vector3 normal;
+    public int id;
     
 
-    public Triangle(Vector3 a, Vector3 b, Vector3 c)
+    public Triangle(Vector3 a, Vector3 b, Vector3 c, int id)
     {
         this.a = a;
         this.b = b;
         this.c = c;
         this.normal = Vector3.Cross(b - a, c - a).normalized;
+        this.id = id;
     }
     
     bool pointInTriangle(Vector3 p)
     {
-        float eps = 0.1f;
-        // Translate point and triangle so that point lies at origin
-        a -= p; b -= p; c -= p;
-        float ab = Vector3.Dot(a, b);
-        float ac = Vector3.Dot(a, c);
-        float bc = Vector3.Dot(b, c);
-        float cc = Vector3.Dot(c, c);
-        // if (bc * ac - cc * ab < 0.0f) return false;
-        Debug.Log("Point in tri A: " + (bc * ac - cc * ab));
-        if (bc * ac - cc * ab + eps < 0.0f) return false;
-        // Make sure plane normals for pab and pca point in the same direction
-        float bb = Vector3.Dot(b, b);
-        // if (ab * bc - ac * bb < 0.0f) return false;
-        Debug.Log("Point in tri B: " + (ab * bc - ac * bb));
-        if (ab * bc - ac * bb + eps < 0.0f) return false;
-        // Otherwise P must be in (or on) the triangle
-        return true;
+        float eps = 0.01f;
+        
+        // Compute vectors        
+        Vector3 v0 = c - a;
+        Vector3 v1 = b - a;
+        Vector3 v2 = p - a;
+
+        // Compute dot products
+        float dot00 = Vector3.Dot(v0, v0);
+        float dot01 = Vector3.Dot(v0, v1);
+        float dot02 = Vector3.Dot(v0, v2);
+        float dot11 = Vector3.Dot(v1, v1);
+        float dot12 = Vector3.Dot(v1, v2);
+
+        // Compute barycentric coordinates
+        float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
+        float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+        float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+        // Check if point is in triangle
+        return (u >= 0) && (v >= 0) && (u + v < 1);
+
     }
 
     public bool intersectPoint(Vector3 p, Vector3 v, float deltaTime, out float f)
@@ -47,10 +54,11 @@ public class Triangle
         float eps = 0.001f;
         f = 0;
         float tHit = Vector3.Dot(a - p, normal) / Vector3.Dot(v, normal);
-        Debug.Log(tHit + " " + deltaTime);
+        Debug.Log(id + ": " + tHit + " " + deltaTime);
         // Debug.Log((0.0f <= tHit).ToString() + " " + (tHit < deltaTime).ToString());
         
-        if (0.0f <= tHit + eps && tHit < deltaTime + eps)
+        // if (0.0f <= tHit + eps && tHit < deltaTime + eps)
+        if (0.0f + eps <= tHit && tHit < deltaTime + eps)
         {
             Debug.Log("Collision with plane detected");
             Vector3 pHit = p + tHit * v;

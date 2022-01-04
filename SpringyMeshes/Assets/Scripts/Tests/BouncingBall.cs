@@ -35,6 +35,33 @@ public class BouncingBall : MonoBehaviour
 
     }
     
+    private void Update()
+    {
+        
+        // User input
+        float acceleration = 5.0f;
+        if(Input.GetKey(KeyCode.W)){
+            Debug.Log("W");
+            force+= acceleration * Vector3.forward * mass;
+        }
+        if(Input.GetKey(KeyCode.S)){
+            Debug.Log("S");
+            force+= -acceleration * Vector3.forward * mass;
+        }
+        if(Input.GetKey(KeyCode.D)){
+            Debug.Log("D");
+            force+= acceleration * Vector3.right * mass;
+        }
+        if(Input.GetKey(KeyCode.A)){
+            Debug.Log("A");
+            force+= -acceleration * Vector3.right * mass;
+        }
+        if(Input.GetKey(KeyCode.Space)){
+            Debug.Log("Space");
+            force+= acceleration * Vector3.up * mass;
+        }
+    }
+    
     void FixedUpdate()
     {        
         if (box.triangles == null)
@@ -47,10 +74,10 @@ public class BouncingBall : MonoBehaviour
         force += -airResistance * state.velocity; // air resistance
         // force += airResistance * windVelocity; // wind
 
-        if (isResting(deltaTime)) {
-            force = Vector3.zero;
-            return;
-        }
+        // if (isResting(deltaTime)) {
+        //     force = Vector3.zero;
+        //     return;
+        // }
 
         // Determine accelerations by Newton’s second law
         Vector3 acceleration = force / mass;
@@ -58,36 +85,39 @@ public class BouncingBall : MonoBehaviour
         // new-state = Integration of accelerations over timestep delta
         State newState = new State(state.velocity, state.position);
         newState.Integrate(acceleration, deltaTime);
+        float min_f = float.PositiveInfinity;
+        int triangleId = 0;
+        bool collision = false;
         for (int i = 0; i < box.triangles.Count; i++)
         {
             float f;
-            if (box.triangles[i].intersectPoint(state.position, (state.velocity + newState.velocity) * 0.5f, deltaTime, out f))
+            if (box.triangles[i].intersectPoint(state.position, newState.velocity, deltaTime, out f))
             {
-                // collision detection with plane
-                // float distance = box.triangles[i].pointDist(state.position);
-                // float newDistance = box.triangles[i].pointDist(newState.position);
-                // if (newDistance < 0.0f)
-                // {
-                // Debug.Log("collision");
-                // calculate first collision and reintegrate
-                // float f = distance / (distance - newDistance);
-                
-                float deltaTimeCollision = deltaTime * f;
-                newState = new State(state.velocity, state.position);   
-                newState.Integrate(acceleration, f);
-                
-                // collision response
-                Vector3 v_n_minus = Vector3.Dot(newState.velocity, box.triangles[i].normal) * box.triangles[i].normal;
-                Vector3 v_t_minus = newState.velocity - v_n_minus;
-                
-                Vector3 v_n_plus = -c_r * Vector3.Dot(newState.velocity, box.triangles[i].normal) * box.triangles[i].normal;
-                Vector3 v_t_plus = (1.0f - c_f) * v_t_minus;
-                
-                newState.velocity = v_n_plus + v_t_plus;
-                newState.Integrate(Vector3.zero, deltaTime - deltaTimeCollision);
-                break; 
-                //}
+                collision = true;
+                triangleId = i;
+                if (min_f > f)
+                {
+                    min_f = f;
+                }
+
             }
+        }
+
+        if (collision)
+        {
+            float deltaTimeCollision = deltaTime * min_f;
+            newState = new State(state.velocity, state.position);   
+            newState.Integrate(acceleration, min_f);
+                
+            // collision response
+            Vector3 v_n_minus = Vector3.Dot(newState.velocity, box.triangles[triangleId].normal) * box.triangles[triangleId].normal;
+            Vector3 v_t_minus = newState.velocity - v_n_minus;
+                
+            Vector3 v_n_plus = -c_r * Vector3.Dot(newState.velocity, box.triangles[triangleId].normal) * box.triangles[triangleId].normal;
+            Vector3 v_t_plus = (1.0f - c_f) * v_t_minus;
+                
+            newState.velocity = v_n_plus + v_t_plus;
+            newState.Integrate(Vector3.zero, deltaTime - deltaTimeCollision);
         }
 
         // current-state = new-state

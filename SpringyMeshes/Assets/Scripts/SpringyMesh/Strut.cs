@@ -41,8 +41,9 @@ public class Strut
         d = 2.0f * from.mass / T;
 
         // k = 50.0f;
-        // k = 50.0f;
         // d = 3.0f;
+        k = 1150.0f;
+        d = 3.0f;
         d *= restLength / avgLength;
         k *= restLength / avgLength;
         Vector3 h = (to.Position - from.Position).normalized;
@@ -52,10 +53,11 @@ public class Strut
         
         // float Ttheta = 0.5f;
         // float Ptheta = 10.0f;
-        float Ttheta = 0.1f;
-        float Ptheta = 10.0f;
-        Vector3 x02 = opposite1.Position - from.Position;
-        Vector3 x03 = opposite2.Position - from.Position;
+        float Ttheta = 0.5f;
+        float Ptheta = 8.0f;
+        
+        Vector3 x02 = from.Position - opposite1.Position;
+        Vector3 x03 = from.Position - opposite2.Position;
         
         Vector3 r_l = x02 - Vector3.Dot(x02, h) * h;
         Vector3 r_r = x03 - Vector3.Dot(x03, h) * h;
@@ -76,12 +78,12 @@ public class Strut
         // dTheta = 0.4f * 10.0f;        
         // k = 0.0f;
         // d = 0.0f;
-        // kTheta = 0.0f;
-        // dTheta = 0.0f;
+        // kTheta = 2.0f;
+        // dTheta = 0.1f;
         // k = 50.0f;
         // d = 3.0f;
-        // kTheta = 200.02f;
-        // dTheta = 10.0f;
+        // kTheta = 20.02f;
+        // dTheta = 1.0f;
 
     }
 

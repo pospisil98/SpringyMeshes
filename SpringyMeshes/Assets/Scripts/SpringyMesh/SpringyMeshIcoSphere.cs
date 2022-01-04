@@ -185,6 +185,7 @@ public class SpringyMeshIcoSphere : MonoBehaviour
         for (int i = 0; i < struts.Count; i++) {
             struts[i].Preprocess(avgLength);
         }
+
     }
 
     private void Update()
@@ -215,6 +216,12 @@ public class SpringyMeshIcoSphere : MonoBehaviour
             Debug.Log("A");
             for (int i = 0; i < vertices.Count; i++) {
                 vertices[i].AddForce(transform.InverseTransformVector(-acceleration * Vector3.right * vertices[i].mass));
+            }
+        }
+        if(Input.GetKey(KeyCode.Space)){
+            Debug.Log("Space");
+            for (int i = 0; i < vertices.Count; i++) {
+                vertices[i].AddForce(transform.InverseTransformVector(5.0f * acceleration * Vector3.up * vertices[i].mass));
             }
         }
     }
