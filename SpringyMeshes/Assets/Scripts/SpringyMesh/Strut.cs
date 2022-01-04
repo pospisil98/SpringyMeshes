@@ -34,18 +34,18 @@ public class Strut
 
     public void Preprocess(float avgLength)
     {        
-        float T = 5.0f;
-        float P = 5.0f;
+        float T = 0.1f;
+        float P = 0.08f;
 
         d = 2.0f * from.mass / T;
         k = 4.0f * Mathf.PI * Mathf.PI * from.mass / (P * P);
 
-        k = 50.0f;
-        d = 1.0f;
+        Debug.Log("K, D: " + k +"     "+ d);
+        
+        //k = 950.0f;
+        //d = 3.5f;
         d *= restLength / avgLength;
         k *= restLength / avgLength;
-        // kTheta = 10.0f;
-        // dTheta = 0.0f;
         Vector3 h = (to.Position - from.Position).normalized;
         
         // this.restAngle = Vector3.Angle(face1.normal, face2.normal);
@@ -53,8 +53,8 @@ public class Strut
         
         // float Ttheta = 0.5f;
         // float Ptheta = 10.0f;
-        float Ttheta = 0.1f;
-        float Ptheta = 10.0f;
+        float Ttheta = 3.0f;
+        float Ptheta = 6.0f;
         Vector3 x02 = opposite1.Position - from.Position;
         Vector3 x03 = opposite2.Position - from.Position;
         
@@ -66,18 +66,19 @@ public class Strut
         float mass2 = opposite2.mass;
         float avgMass = 0.5f * (mass1 + mass2);
         
-        dTheta = 2.0f * avgMass * avgDist / Ttheta;
-        kTheta = 4.0f * Mathf.PI * Mathf.PI * avgDist * avgDist * avgMass / (Ptheta * Ptheta);        
-        Debug.Log(dTheta + " " + kTheta);
+        dTheta = 2.0f * avgMass * avgDist / Ttheta;    
+        kTheta = 4.0f * Mathf.PI * Mathf.PI * avgDist * avgDist * avgMass / (Ptheta * Ptheta);   
+        
+        Debug.Log( "Kt, Dt: " + kTheta+ "    " + dTheta);
         // tyhle jsou fajn
         // k = 25.0f;
         // d = 8.0f;
         // kTheta = 0.04f * 8.0f;
         // dTheta = 0.4f * 10.0f;        
-        // k = 0.0f;
-        // d = 0.0f;
-        // kTheta = 0.0f;
-        // dTheta = 0.0f;
+        //k = 0.0f;
+        //d = 0.0f;
+        //kTheta = 10.01f;
+        //dTheta = 0.0f;
         // k = 50.0f;
         // d = 3.0f;
         // kTheta = 200.02f;
@@ -87,7 +88,7 @@ public class Strut
 
     public bool IsSame(int id1, int id2)
     {
-        return (from.id == id1 && to.id == id2) || (@from.id == id2 && to.id == id1);
+        return (from.id == id1 && to.id == id2) || (from.id == id2 && to.id == id1);
     }
 
     public void ApplyForces()
