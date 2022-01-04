@@ -74,7 +74,7 @@ public class Triangle
     
     public float pointDist(Vector3 pointPosition)
     {
-        return Vector3.Dot(pointPosition - a, normal);
+        return Mathf.Abs(Vector3.Dot(pointPosition - a, normal));
     }
     
     public float sphereDist(Vector3 spherePosition, float sphereRadius)

@@ -57,39 +57,41 @@ public class Box : MonoBehaviour
         //     6, 5, 7,
         // };
 
-        float r = 0.25f;
-        float d = 1.0f;
+        float w = 16.0f;
+        float h = 10.0f;
+        float r = 1.0f;
+        float d = 12.0f;
         vertices = new List<Vector3>
         {
             // rect 0
-            new Vector3(-(d + r), 1, 0),
-            new Vector3(-(d + r), 1, 1),
+            new Vector3(-(d + r), h, 0),
+            new Vector3(-(d + r), h, w),
             new Vector3(-r, 0, 0),
-            new Vector3(-r, 0, 1),
+            new Vector3(-r, 0, w),
             
             // rect 1
-            new Vector3((d + r), 0, 1),
+            new Vector3((d + r), 0, w),
             new Vector3((d + r), 0, 0),
-            new Vector3(r, -1, 1),
-            new Vector3(r, -1, 0),
+            new Vector3(r, -h, w),
+            new Vector3(r, -h, 0),
             
             // rect 2
-            new Vector3(-(d + r), -1, 0),
-            new Vector3(-(d + r), -1, 1),
-            new Vector3(-r, -2, 0),
-            new Vector3(-r, -2, 1),
+            new Vector3(-(d + r), -h, 0),
+            new Vector3(-(d + r), -h, w),
+            new Vector3(-r, -2 * h, 0),
+            new Vector3(-r, -2 * h, w),
 
             // rect 3
-            new Vector3((d + r), -2, 1),
-            new Vector3((d + r), -2, 0),
-            new Vector3(r, -3, 1),
-            new Vector3(r, -3, 0),
+            new Vector3((d + r), -2 * h, w),
+            new Vector3((d + r), -2 * h, 0),
+            new Vector3(r, -3 * h, w),
+            new Vector3(r, -3 * h, 0),
             
             // ground
-            new Vector3(-100, -4, -100),
-            new Vector3(-100, -4, 100),
-            new Vector3(100, -4, -100),
-            new Vector3(100, -4, 100),
+            new Vector3(-1000, -4 * h, -1000),
+            new Vector3(-1000, -4 * h, 1000),
+            new Vector3(1000, -4 * h, -1000),
+            new Vector3(1000, -4 * h, 1000),
         };
         triangleIndices = new List<int>
         {
