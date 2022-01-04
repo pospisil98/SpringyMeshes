@@ -198,6 +198,10 @@ public class SpringyMeshMesh : MonoBehaviour
 
             vertices[i].mass = vertexMass;
         }
+        
+        // odkomentuj, pokud chces vytahat kralika za usi!
+        // vertices[10].isFixed = true;
+        // vertices[14].isFixed = true;
     }
     
     protected virtual void Render()
