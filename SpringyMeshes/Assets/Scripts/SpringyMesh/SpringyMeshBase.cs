@@ -2,27 +2,40 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Base class for Soft Body represented by damped and torsional springs.
+/// </summary>
 public abstract class SpringyMeshBase : MonoBehaviour
 {
     public bool drawGizmos = true;
-    public float mass;
     public Material mat;
 
+    /// <summary> Mass of object </summary>
+    public float mass;
+    /// <summary> Base time constant of damped spring </summary>
     public float T;
+    /// <summary> Base period of damped spring oscillation </summary>
     public float P;
+    /// <summary> Base time constant of torsional spring </summary>
     public float Ttheta;
+    /// <summary> Base period of torsional spring oscillation </summary>
     public float Ptheta;
+    
+    /// <summary> Indices of nodes which should remain fixed in space </summary>
+    public int[] fixedVerticesIndices;
 
     protected List<Vertex> vertices;
     protected List<Strut> struts;
     protected List<Face> faces;
-
     protected List<int> triangles;
 
     protected MeshRenderer meshRenderer;
     protected MeshFilter meshFilter;
     protected Mesh mesh;
 
+    /// <summary>
+    /// Renders Soft Body geometry from internal representation
+    /// </summary>
     protected virtual void Render()
     {
         mesh.Clear();
@@ -43,12 +56,15 @@ public abstract class SpringyMeshBase : MonoBehaviour
         mesh.RecalculateBounds();
     }
 
+    /// <summary>
+    /// Handles basic user input (move + jump)
+    /// </summary>
     protected virtual void ProcessInput()
     {
-        // User input
         float acceleration = 100.0f;
+        
         if (Input.GetKey(KeyCode.W)) {
-            Debug.Log("W");
+            Debug.Log("Pressed W");
             for (int i = 0; i < vertices.Count; i++) {
                 vertices[i].AddForce(
                     transform.InverseTransformVector(acceleration * Vector3.forward * vertices[i].mass));
@@ -56,7 +72,7 @@ public abstract class SpringyMeshBase : MonoBehaviour
         }
 
         if (Input.GetKey(KeyCode.S)) {
-            Debug.Log("S");
+            Debug.Log("Pressed S");
             for (int i = 0; i < vertices.Count; i++) {
                 vertices[i].AddForce(
                     transform.InverseTransformVector(-acceleration * Vector3.forward * vertices[i].mass));
@@ -64,14 +80,14 @@ public abstract class SpringyMeshBase : MonoBehaviour
         }
 
         if (Input.GetKey(KeyCode.D)) {
-            Debug.Log("D");
+            Debug.Log("Pressed D");
             for (int i = 0; i < vertices.Count; i++) {
                 vertices[i].AddForce(transform.InverseTransformVector(acceleration * Vector3.right * vertices[i].mass));
             }
         }
 
         if (Input.GetKey(KeyCode.A)) {
-            Debug.Log("A");
+            Debug.Log("Pressed A");
             for (int i = 0; i < vertices.Count; i++) {
                 vertices[i].AddForce(
                     transform.InverseTransformVector(-acceleration * Vector3.right * vertices[i].mass));
@@ -79,7 +95,7 @@ public abstract class SpringyMeshBase : MonoBehaviour
         }
 
         if (Input.GetKey(KeyCode.Space)) {
-            Debug.Log("Space");
+            Debug.Log("Pressed Space");
             for (int i = 0; i < vertices.Count; i++) {
                 vertices[i].AddForce(
                     transform.InverseTransformVector(5.0f * acceleration * Vector3.up * vertices[i].mass));
@@ -87,14 +103,23 @@ public abstract class SpringyMeshBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Compute average length of struts in soft body
+    /// </summary>
+    /// <returns>Average length of strut</returns>
     protected float GetAverageStrutLength()
     {
         return struts.Sum(strut => strut.restLength) / struts.Count;
     }
 
+    /// <summary>
+    /// Distribute mass of object into vertices according on are of neighbour faces and angles incident with those faces
+    /// </summary>
+    /// <param name="neighbourFaces">List of hashsets of neighbour faces indices</param>
     protected void SetupVerticesMassBasedOnAnglesAndAreas(List<HashSet<int>> neighbourFaces)
     {
         float totalArea = faces.Sum(f => f.initialArea);
+        
         for (int i = 0; i < vertices.Count; i++) {
             float vertexMass = 0.0f;
             HashSet<int> n = neighbourFaces[i];
@@ -107,10 +132,17 @@ public abstract class SpringyMeshBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Initialize things connected with mesh initialization and generation
+    /// </summary>
     protected abstract void InitMeshStuff();
 
+    /// <summary>
+    /// Converts Mesh to our Soft Body representation
+    /// </summary>
     protected virtual void InitObject()
     {
+        // Get rid of multiple indices at one position
         List<VertexHelper> vertexIndexHelper = new List<VertexHelper>();
         var originalVertices = mesh.vertices;
         for (int index = 0; index < originalVertices.Length; index++) {
@@ -125,7 +157,7 @@ public abstract class SpringyMeshBase : MonoBehaviour
             }
         }
 
-        // Setup vertices ids
+        // Setup vertices IDs
         for (int i = 0; i < vertices.Count; i++) {
             vertices[i].id = i;
         }
@@ -133,8 +165,8 @@ public abstract class SpringyMeshBase : MonoBehaviour
         Debug.Log("Vertex count: " + vertices.Count);
 
         // Create struts
-        List<EdgeHelper> springsInMesh = new List<EdgeHelper>();
         List<int> editedIndexCache = new List<int>();
+        // Compare original vertex index with those which are without duplicates
         for (int triangleIndex = 0; triangleIndex < mesh.triangles.Length; triangleIndex += 3) {
             int editedIndex0 =
                 vertexIndexHelper[
@@ -158,7 +190,7 @@ public abstract class SpringyMeshBase : MonoBehaviour
             }
         }
 
-        // Create triangles
+        // Create triangles (from vertices without duplicates)
         List<HashSet<int>> triangleHelpers = new List<HashSet<int>>();
         for (int i = 0; i < mesh.triangles.Length; i += 3) {
             HashSet<int> tri = new HashSet<int> {
@@ -176,18 +208,21 @@ public abstract class SpringyMeshBase : MonoBehaviour
             }
         }
 
+        // Init neighbourFaces helper structures
         List<HashSet<int>> neighbourFaces = new List<HashSet<int>>();
         for (int i = 0; i < vertices.Count; i++) {
             neighbourFaces.Add(new HashSet<int>());
         }
-
+        
+        // Go over triangles and create struts according to triangle sides 
         int strutId = 0;
         for (int i = 0; i < triangles.Count; i += 3) {
             int id1 = triangles[i];
             int id2 = triangles[i + 1];
             int id3 = triangles[i + 2];
 
-            Face face = new Face(i / 3, vertices[id1], vertices[id2], vertices[id3]);
+            // Create new face from current three vertices
+            Face face = new Face(vertices[id1], vertices[id2], vertices[id3]);
             faces.Add(face);
 
             // Add index of neighbour face in helper list
@@ -195,6 +230,7 @@ public abstract class SpringyMeshBase : MonoBehaviour
             neighbourFaces[id2].Add(i / 3);
             neighbourFaces[id3].Add(i / 3);
 
+            // Get reference to strut when it already exist
             Strut s1 = null;
             Strut s2 = null;
             Strut s3 = null;
@@ -212,6 +248,8 @@ public abstract class SpringyMeshBase : MonoBehaviour
                 }
             }
 
+            // When any strut is nonexistent - create it and set adjacent face and opposite vertex
+            // When it exist then set second adjacent face and opposite vertex
             if (s1 == null) {
                 s1 = new Strut(strutId++, vertices[id1], vertices[id2]) {
                     face2 = face,
@@ -263,17 +301,25 @@ public abstract class SpringyMeshBase : MonoBehaviour
 
     protected virtual void OnEnable()
     {
+        // Initialize lists
         vertices = new List<Vertex>();
         triangles = new List<int>();
         struts = new List<Strut>();
         faces = new List<Face>();
 
+        // Ensure object initialization
         InitMeshStuff();
         InitObject();
+
+        // Aditionally fix desired vertices
+        foreach (int i in fixedVerticesIndices) {
+            vertices[i].isFixed = true;
+        }
     }
 
     protected virtual void Update()
     {
+        // Only render soft body, everything else is computed in fixed update
         Render();
     }
 
@@ -328,11 +374,14 @@ public abstract class SpringyMeshBase : MonoBehaviour
             return;
         }
 
+        // When desired draw spheres on positions of particles (yellow = fixed, green at rest, red normal)
         Gizmos.color = Color.green;
 
         for (int i = 0; i < vertices.Count; i++) {
             if (vertices[i].isAtRestFlag) {
                 Gizmos.color = Color.green;
+            } else if (vertices[i].isFixed) {
+                Gizmos.color = Color.yellow;
             } else {
                 Gizmos.color = Color.red;
             }
@@ -342,6 +391,9 @@ public abstract class SpringyMeshBase : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Helper class for removing duplicates of vertices from original mesh
+    /// </summary>
     protected struct VertexHelper
     {
         public Vector3 position;
@@ -354,33 +406,12 @@ public abstract class SpringyMeshBase : MonoBehaviour
         }
     }
 
-    protected struct EdgeHelper
-    {
-        public int from;
-        public int to;
-
-        public EdgeHelper(int f, int t)
-        {
-            this.from = f;
-            this.to = t;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (!(obj is EdgeHelper))
-                return false;
-
-            EdgeHelper other = (EdgeHelper) obj;
-
-            return (this.from == other.from && this.to == other.to) || (this.from == other.to && this.to == other.from);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.from.GetHashCode() * 17 + this.to.GetHashCode();
-        }
-    }
-
+    /// <summary>
+    /// Iterate over vertex helpers and return the closest one
+    /// </summary>
+    /// <param name="pos">Position for which we want to find vertex helper</param>
+    /// <param name="vertexHelpers">List of actual vertexHelpers</param>
+    /// <returns>Index of vertexHelper closest to the position</returns>
     protected int FindIndexOfClosestHelper(Vector3 pos, List<VertexHelper> vertexHelpers)
     {
         int index = -1;

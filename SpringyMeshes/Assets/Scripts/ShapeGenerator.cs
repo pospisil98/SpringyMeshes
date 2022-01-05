@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Class providing Meshes for some basic shapes (Cube, Tetrahedron, IcoSphere)
+/// </summary>
 public static class ShapeGenerator
 {
     public enum ShapeType
@@ -12,9 +15,12 @@ public static class ShapeGenerator
         Tetrahedron
     };
 
+    /// <summary>
+    /// Cube defined by 8 vertices, with given size
+    /// </summary>
     public static class Cube
     {
-        public static Mesh Create(int size)
+        public static Mesh Create(float size)
         {
             Mesh mesh = new Mesh {
                 name = "Cube",
@@ -53,17 +59,20 @@ public static class ShapeGenerator
         }
     }
 
+    /// <summary>
+    /// Tetrahedron defined by its 4 vertices and 4 faces with given size
+    /// </summary>
     public static class Tetrahedron
     {
-        public static Mesh Create()
+        public static Mesh Create(float size)
         {
             Mesh mesh = new Mesh {
                 name = "Tetrahedron",
                 vertices = new List<Vector3> {
                     new Vector3(0, 0, 0),
-                    new Vector3(1, 0, 0),
-                    new Vector3(0, 0, 1),
-                    new Vector3(0, 1, 0)
+                    new Vector3(size, 0, 0),
+                    new Vector3(0, 0, size),
+                    new Vector3(0, size, 0)
                 }.ToArray(),
                 triangles = new List<int> {
                     0, 1, 2, // floor
@@ -83,8 +92,12 @@ public static class ShapeGenerator
     }
 
 
+    /// <summary>
+    /// IcoSphere with different level of subdivision and radius
+    /// </summary>
     public static class IcoSphere
     {
+        // From https://github.com/kaiware007/IcoSphereCreator
         public static Mesh Create(int n, float radius)
         {
             int nn = n * 4;
