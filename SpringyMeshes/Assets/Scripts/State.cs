@@ -39,12 +39,12 @@ public class State
         // position = position + (prevVelocity + velocity) * 0.5f * deltaTime;
         
         // Leap frog
-        //Vector3 prevVelocity = velocity;
-        //Vector3 newPosition = position + prevVelocity * deltaTime * 0.5f;
-        //Vector3 newVelocity = prevVelocity + acceleration * deltaTime;
-        //newPosition = newPosition + prevVelocity * deltaTime * 0.5f;
-        //velocity = newVelocity;
-        //position = newPosition;
+        // Vector3 prevVelocity = velocity;
+        // Vector3 newPosition = position + prevVelocity * deltaTime * 0.5f;
+        // Vector3 newVelocity = prevVelocity + acceleration * deltaTime;
+        // newPosition = newPosition + prevVelocity * deltaTime * 0.5f;
+        // velocity = newVelocity;
+        // position = newPosition;
         
         // Runge-Kutta
         Vector3 position1 = position;

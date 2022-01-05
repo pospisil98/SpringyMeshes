@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
+using UnityEngine.Serialization;
 
 public class BouncingBall : MonoBehaviour
 {
@@ -23,7 +24,7 @@ public class BouncingBall : MonoBehaviour
     private Plane plane;
 
     public GameObject planeMesh;
-    public Box box;
+    [FormerlySerializedAs("collider")] [FormerlySerializedAs("box")] public MyCollider myCollider;
 
     private const float epsilon = 0.01f;
 
@@ -64,7 +65,7 @@ public class BouncingBall : MonoBehaviour
     
     void FixedUpdate()
     {        
-        if (box.triangles == null)
+        if (myCollider.triangles == null)
         {
             Debug.Log("box null");
         }
@@ -85,13 +86,15 @@ public class BouncingBall : MonoBehaviour
         // new-state = Integration of accelerations over timestep delta
         State newState = new State(state.velocity, state.position);
         newState.Integrate(acceleration, deltaTime);
+        
+        
         float min_f = float.PositiveInfinity;
         int triangleId = 0;
         bool collision = false;
-        for (int i = 0; i < box.triangles.Count; i++)
+        for (int i = 0; i < myCollider.triangles.Count; i++)
         {
             float f;
-            if (box.triangles[i].intersectPoint(state.position, newState.velocity, deltaTime, out f))
+            if (myCollider.triangles[i].intersectPoint(state.position, newState.velocity, deltaTime, out f))
             {
                 collision = true;
                 triangleId = i;
@@ -110,10 +113,10 @@ public class BouncingBall : MonoBehaviour
             newState.Integrate(acceleration, min_f);
                 
             // collision response
-            Vector3 v_n_minus = Vector3.Dot(newState.velocity, box.triangles[triangleId].normal) * box.triangles[triangleId].normal;
+            Vector3 v_n_minus = Vector3.Dot(newState.velocity, myCollider.triangles[triangleId].normal) * myCollider.triangles[triangleId].normal;
             Vector3 v_t_minus = newState.velocity - v_n_minus;
                 
-            Vector3 v_n_plus = -c_r * Vector3.Dot(newState.velocity, box.triangles[triangleId].normal) * box.triangles[triangleId].normal;
+            Vector3 v_n_plus = -c_r * Vector3.Dot(newState.velocity, myCollider.triangles[triangleId].normal) * myCollider.triangles[triangleId].normal;
             Vector3 v_t_plus = (1.0f - c_f) * v_t_minus;
                 
             newState.velocity = v_n_plus + v_t_plus;
@@ -185,13 +188,13 @@ public class BouncingBall : MonoBehaviour
             bool triangleIntersection = false;
             
             try {
-                for (int i = 0; i < box.triangles.Count; i++)
+                for (int i = 0; i < myCollider.triangles.Count; i++)
                 {
                     float f;
-                    if (box.triangles[i].intersectPoint(state.position, state.velocity, deltaTime, out f))
+                    if (myCollider.triangles[i].intersectPoint(state.position, state.velocity, deltaTime, out f))
                     {
                         triangleIntersection = true;
-                        tri = box.triangles[i];
+                        tri = myCollider.triangles[i];
                         break;
                     }
                 }

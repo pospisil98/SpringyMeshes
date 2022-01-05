@@ -10,6 +10,7 @@ using UnityEngine;
         private State state;
         
         private Plane plane;
+        private MyCollider collider;
 
         public bool isFixed = false;
 
@@ -18,10 +19,11 @@ using UnityEngine;
         public bool isAtRestFlag = false;
 
         // coefficient of restitution
-        private float c_r = 0.9f;
+        // private float c_r = 0.9f; // default
+        private float c_r = 0.6f;
         
         // coefficient of friction
-        private float c_f = 0.9f;
+        private float c_f = 0.3f;
 
         public Vertex(Vector3 position, float mass)
         {
@@ -35,11 +37,18 @@ using UnityEngine;
         {
             this.mass = mass;
             state = new State(Vector3.zero, position, Vector3.zero);
-            // TODO: this representation of the plane is temporary
             this.plane = plane;
         }
+        
+        public Vertex(Vector3 position, float mass, MyCollider collider)
+        {
+            this.mass = mass;
+            state = new State(Vector3.zero, position, Vector3.zero);
+            // TODO: this representation of the plane is temporary
+            this.collider = collider;
+        }
 
-        public void Tick(float deltaTime, Transform transform)
+        public void TickPlane(float deltaTime, Transform transform)
         {
             if (isFixed)
             {
@@ -84,6 +93,73 @@ using UnityEngine;
                                    transform.InverseTransformDirection(plane.normal);
                 Vector3 v_t_plus = (1.0f - c_f) * v_t_minus;
 
+                newState.velocity = v_n_plus + v_t_plus;
+                newState.Integrate(Vector3.zero, deltaTime - deltaTimeCollision);
+            }
+
+            // current-state = new-state
+            state = newState;
+        }
+        
+        public void TickCollider(float deltaTime, Transform transform)
+        {
+            if (isFixed)
+            {
+                state.velocity = Vector3.zero;
+                state.force = Vector3.zero;
+                return;
+            }
+
+            if (isResting(transform))
+            {
+                state.force = Vector3.zero;
+                return;
+            }
+
+            // Determine accelerations by Newton’s second law
+            Vector3 acceleration = state.force / mass;
+            state.force = Vector3.zero;
+
+            // new-state = Integration of accelerations over timestep delta
+            State newState = new State(state.velocity, state.position);
+            newState.Integrate(acceleration, deltaTime);
+
+            float min_f = float.PositiveInfinity;
+            int triangleId = 0;
+            bool collision = false;
+            for (int i = 0; i < collider.triangles.Count; i++)
+            {
+                // if(collider.triangles[i].pointDist(transform.TransformPoint(state.position)) > 0.2f) continue;\
+                float newDistance = collider.triangles[i].pointDist(transform.TransformPoint(newState.position));
+                if (newDistance > 0.0f || newDistance < -0.2f) continue;
+                float f;
+                if (collider.triangles[i].intersectPoint(
+                    transform.TransformPoint(state.position),
+                    transform.TransformVector(newState.velocity), deltaTime, out f))
+                {
+                    collision = true;
+                    triangleId = i;
+                    if (min_f > f)
+                    {
+                        min_f = f;
+                    }
+
+                }
+            }
+            
+            if (collision)
+            {
+                float deltaTimeCollision = deltaTime * min_f;
+                newState = new State(state.velocity, state.position);   
+                newState.Integrate(acceleration, min_f);
+                Vector3 triNormal = transform.InverseTransformDirection(collider.triangles[triangleId].normal);
+                // collision response
+                Vector3 v_n_minus = Vector3.Dot(newState.velocity,triNormal) * triNormal;
+                Vector3 v_t_minus = newState.velocity - v_n_minus;
+                
+                Vector3 v_n_plus = -c_r * Vector3.Dot(newState.velocity, triNormal) * triNormal;
+                Vector3 v_t_plus = (1.0f - c_f) * v_t_minus;
+                
                 newState.velocity = v_n_plus + v_t_plus;
                 newState.Integrate(Vector3.zero, deltaTime - deltaTimeCollision);
             }

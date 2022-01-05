@@ -36,16 +36,17 @@ public class SoftBodyBox : SoftBody
         meshFilter = gameObject.AddComponent<MeshFilter>();
         mesh = meshFilter.mesh;
 
+        float size = 10.0f;
         particles = new List<SBNode>
         {
             new SBNode(new Vector3(0, 0, 0), 1.0f),
-            new SBNode(new Vector3(1, 0, 0), 1.0f),
-            new SBNode(new Vector3(1, 1, 0), 1.0f),
-            new SBNode(new Vector3(0, 1, 0), 1.0f),
-            new SBNode(new Vector3(0, 1, 1), 1.0f),
-            new SBNode(new Vector3(1, 1, 1), 1.0f),
-            new SBNode(new Vector3(1, 0, 1), 1.0f),
-            new SBNode(new Vector3(0, 0, 1), 1.0f),
+            new SBNode(new Vector3(size, 0, 0), 1.0f),
+            new SBNode(new Vector3(size, size, 0), 1.0f),
+            new SBNode(new Vector3(0, size, 0), 1.0f),
+            new SBNode(new Vector3(0, size, size), 1.0f),
+            new SBNode(new Vector3(size, size, size), 1.0f),
+            new SBNode(new Vector3(size, 0, size), 1.0f),
+            new SBNode(new Vector3(0, 0, size), 1.0f),
         };
         //
         // particles[2].IsFixed = true;
@@ -93,10 +94,10 @@ public class SoftBodyBox : SoftBody
             new SBDampedSpring(particles[3], particles[5], k, d),
 
 
-            new SBDampedSpring(particles[0], particles[5], k, d),
-            new SBDampedSpring(particles[1], particles[4], k, d),
-            new SBDampedSpring(particles[3], particles[6], k, d),
-            new SBDampedSpring(particles[2], particles[7], k, d),
+            // new SBDampedSpring(particles[0], particles[5], k, d),
+            // new SBDampedSpring(particles[1], particles[4], k, d),
+            // new SBDampedSpring(particles[3], particles[6], k, d),
+            // new SBDampedSpring(particles[2], particles[7], k, d),
         };
 
         triangles = new List<int>

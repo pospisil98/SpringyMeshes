@@ -17,6 +17,13 @@ public class SpringyMeshIcoSphere : SpringyMeshBase
         meshFilter.mesh = ShapeGenerator.IcoSphere.Create(subdivisions, radius);
 
         mesh = meshFilter.mesh;
+
+    }
+
+    protected override void InitObject()
+    {
+        base.InitObject();
+        // vertices[0].isFixed = true;
     }
 
     protected override void Update()

@@ -23,6 +23,10 @@ public abstract class SpringyMeshBase : MonoBehaviour
     protected MeshFilter meshFilter;
     protected Mesh mesh;
 
+    public MyCollider collider;
+
+
+
     protected virtual void Render()
     {
         mesh.Clear();
@@ -46,7 +50,7 @@ public abstract class SpringyMeshBase : MonoBehaviour
     protected virtual void ProcessInput()
     {
         // User input
-        float acceleration = 100.0f;
+        float acceleration = 30.0f;
         if (Input.GetKey(KeyCode.W)) {
             Debug.Log("W");
             for (int i = 0; i < vertices.Count; i++) {
@@ -82,7 +86,7 @@ public abstract class SpringyMeshBase : MonoBehaviour
             Debug.Log("Space");
             for (int i = 0; i < vertices.Count; i++) {
                 vertices[i].AddForce(
-                    transform.InverseTransformVector(5.0f * acceleration * Vector3.up * vertices[i].mass));
+                    transform.InverseTransformVector(3.0f * acceleration * Vector3.up * vertices[i].mass));
             }
         }
     }
@@ -120,7 +124,14 @@ public abstract class SpringyMeshBase : MonoBehaviour
             });
 
             if (!isNodeClose) {
-                vertices.Add(new Vertex(originalVertices[index], mass));
+                if (collider == null)
+                {
+                    vertices.Add(new Vertex(originalVertices[index], mass));
+                }
+                else
+                {
+                    vertices.Add(new Vertex(originalVertices[index], mass, collider));
+                }
                 vertexIndexHelper.Add(new VertexHelper(originalVertices[index], vertices.Count - 1));
             }
         }
@@ -263,6 +274,8 @@ public abstract class SpringyMeshBase : MonoBehaviour
 
     protected virtual void OnEnable()
     {
+        Physics.autoSimulation = false;
+        
         vertices = new List<Vertex>();
         triangles = new List<int>();
         struts = new List<Strut>();
@@ -318,7 +331,14 @@ public abstract class SpringyMeshBase : MonoBehaviour
         // Loop over all of the particles, dividing the particle’s total applied force by its
         // mass to obtain its acceleration
         for (int i = 0; i < vertices.Count; i++) {
-            vertices[i].Tick(Time.fixedDeltaTime, transform);
+            if (collider == null)
+            {
+                vertices[i].TickPlane(Time.fixedDeltaTime, transform);
+            }
+            else
+            {
+                vertices[i].TickCollider(Time.fixedDeltaTime, transform);
+            }
         }
     }
 

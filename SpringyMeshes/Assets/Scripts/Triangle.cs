@@ -51,14 +51,14 @@ public class Triangle
     public bool intersectPoint(Vector3 p, Vector3 v, float deltaTime, out float f)
     {
 
-        float eps = 0.001f;
+        float eps = 0.0001f;
         f = 0;
         float tHit = Vector3.Dot(a - p, normal) / Vector3.Dot(v, normal);
         Debug.Log(id + ": " + tHit + " " + deltaTime);
         // Debug.Log((0.0f <= tHit).ToString() + " " + (tHit < deltaTime).ToString());
         
         // if (0.0f <= tHit + eps && tHit < deltaTime + eps)
-        if (0.0f + eps <= tHit && tHit < deltaTime + eps)
+        if (0.0f + eps <= tHit && tHit <= deltaTime + eps)
         {
             Debug.Log("Collision with plane detected");
             Vector3 pHit = p + tHit * v;
@@ -74,7 +74,8 @@ public class Triangle
     
     public float pointDist(Vector3 pointPosition)
     {
-        return Mathf.Abs(Vector3.Dot(pointPosition - a, normal));
+        // return Mathf.Abs(Vector3.Dot(pointPosition - a, normal));
+        return (Vector3.Dot(pointPosition - a, normal));
     }
     
     public float sphereDist(Vector3 spherePosition, float sphereRadius)
