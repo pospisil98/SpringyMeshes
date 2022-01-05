@@ -1,43 +1,63 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Strut
 {
-    public int id;
-    public float k;
-    public float d;
+    /// <summary> Damped spring springiness constant </summary>
+    private float k;
+    /// <summary> Damped spring damping constant </summary>
+    private float d;
+    /// <summary> Torsional spring springiness constant </summary>
+    private float kTheta;
+    /// <summary> Torsional spring damping constant </summary>
+    private float dTheta;
+    
+    /// <summary> Length of strut when at rest </summary>
     public float restLength;
-    private float restAngle;
-    public float kTheta;
-    public float dTheta;
+    /// <summary> Angle of faces incident with strut while at rest </summary>
+    public float restAngle;
 
+    /// <summary> Start vertex of strut </summary>
     public Vertex from;
+    /// <summary> End vertex of strut </summary>
     public Vertex to;
 
+    /// <summary> One adjacent face </summary>
     public Face face1;
+    /// <summary> Second adjacent face </summary>
     public Face face2;
 
+    /// <summary> First opposite vertex (third in one face) </summary>
     public Vertex opposite1;
+    /// <summary> Second opposite vertex (third in second face) </summary>
     public Vertex opposite2;
 
     public Strut(int id, Vertex from, Vertex to)
     {
-        this.id = id;
-
         this.from = from;
         this.to = to;
 
         this.restLength = Vector3.Distance(from.Position, to.Position);
     }
 
+    /// <summary>
+    /// Computes parameters of strut based on desired parameters
+    /// </summary>
+    /// <param name="avgLength">Average length of strut in soft body</param>
+    /// <param name="T">Damped spring time constant</param>
+    /// <param name="P">Damped spring oscillation period</param>
+    /// <param name="Ttheta">Torsional spring time constant</param>
+    /// <param name="Ptheta">Torsional spring oscillation period</param>
     public void Preprocess(float avgLength, float T, float P, float Ttheta, float Ptheta)
     {
+        // Calculate springiness and damping factors
         k = 4.0f * Mathf.PI * Mathf.PI * from.mass / (P * P);
         d = 2.0f * from.mass / T;
 
-        d *= restLength / avgLength;
+        // Scale those factors by strut length 
         k *= restLength / avgLength;
+        d *= restLength / avgLength;
+
+        // Calculate stuff needed for computation of torsional factors
         Vector3 h = (to.Position - from.Position).normalized;
 
         this.restAngle = Mathf.Atan2(Vector3.Dot(Vector3.Cross(face1.normal, face2.normal), h),
@@ -54,17 +74,27 @@ public class Strut
         float mass2 = opposite2.mass;
         float avgMass = 0.5f * (mass1 + mass2);
 
-        dTheta = 2.0f * avgMass * avgDist / Ttheta;
+        // Compute torsional spring factors
         kTheta = 4.0f * Mathf.PI * Mathf.PI * avgDist * avgDist * avgMass / (Ptheta * Ptheta);
+        dTheta = 2.0f * avgMass * avgDist / Ttheta;
 
         Debug.Log("Kt, Dt: " + kTheta + "    " + dTheta);
     }
 
+    /// <summary>
+    /// Comparison function for strut (based on from/to IDs)
+    /// </summary>
+    /// <param name="id1">Vertex1 ID</param>
+    /// <param name="id2">Vertex2 ID</param>
+    /// <returns>True when strut is represented by those two vertices</returns>
     public bool IsSame(int id1, int id2)
     {
         return (from.id == id1 && to.id == id2) || (from.id == id2 && to.id == id1);
     }
 
+    /// <summary>
+    /// Applies all forces acting in strut
+    /// </summary>
     public void ApplyForces()
     {
         float length = Vector3.Distance(from.Position, to.Position);
@@ -109,6 +139,7 @@ public class Strut
         Vector3 f1 = -(d02 * f2 + d03 * f3) / Vector3.Magnitude(to.Position - from.Position);
         Vector3 f0 = -(f1 + f2 + f3);
 
+        // Apply computed forces
         from.AddForce(f0);
         to.AddForce(f1);
         opposite1.AddForce(f2);

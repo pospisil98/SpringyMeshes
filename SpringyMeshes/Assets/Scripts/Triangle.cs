@@ -11,7 +11,6 @@ public class Triangle
     public Vector3 c;
     public Vector3 normal;
     public int id;
-    
 
     public Triangle(Vector3 a, Vector3 b, Vector3 c, int id)
     {

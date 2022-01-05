@@ -1,20 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
-using UnityEngine.UI;
 using Vector3 = UnityEngine.Vector3;
 
+/// <summary>
+/// Class representing state of particle in Soft Body simulation
+/// </summary>
 public class State
 {
+    /// <summary> Current particle velocity </summary>
     public Vector3 velocity;
+    /// <summary> Current particle position </summary>
     public Vector3 position;
+    /// <summary> Current force acting on particle </summary>
     public Vector3 force;
     
     public State()
     {
-        this.velocity = Vector3.zero;
-        this.position = Vector3.zero;
-        this.force = Vector3.zero;
+        velocity = Vector3.zero;
+        position = Vector3.zero;
+        force = Vector3.zero;
     }
 
     public State(Vector3 velocity, Vector3 position)
@@ -29,24 +31,28 @@ public class State
         this.force = force;
         this.position = position;
     }
-    
 
+    /// <summary>
+    /// Performs update of state with possibilty to use Euler / Leapfrog / Runge-Kutta integration method 
+    /// </summary>
+    /// <param name="acceleration">Acceleration of particle</param>
+    /// <param name="deltaTime">Simulation timestep</param>
     public void Integrate(Vector3 acceleration, float deltaTime)
     {
-        // Euler
+        // Euler method
         // Vector3 prevVelocity = velocity;
         // velocity = velocity + acceleration * deltaTime;
         // position = position + (prevVelocity + velocity) * 0.5f * deltaTime;
         
-        // Leap frog
-        // Vector3 prevVelocity = velocity;
-        // Vector3 newPosition = position + prevVelocity * deltaTime * 0.5f;
-        // Vector3 newVelocity = prevVelocity + acceleration * deltaTime;
-        // newPosition = newPosition + prevVelocity * deltaTime * 0.5f;
-        // velocity = newVelocity;
-        // position = newPosition;
-        
-        // Runge-Kutta
+        // Leap frog method
+        //Vector3 prevVelocity = velocity;
+        //Vector3 newPosition = position + prevVelocity * deltaTime * 0.5f;
+        //Vector3 newVelocity = prevVelocity + acceleration * deltaTime;
+        //newPosition = newPosition + prevVelocity * deltaTime * 0.5f;
+        //velocity = newVelocity;
+        //position = newPosition;
+
+        // Runge-Kutta4 method
         Vector3 position1 = position;
         Vector3 velocity1 = velocity;
         Vector3 acceleration1 = acceleration;
@@ -66,6 +72,5 @@ public class State
         
         position = position + deltaTime * (velocity1 + 2.0f * (velocity2 + velocity3) + velocity4) / 6.0f;
         velocity = velocity + deltaTime * (acceleration1 + 2.0f * (acceleration2 + acceleration3) + acceleration4) / 6.0f;
-
     }
 }
