@@ -7,7 +7,12 @@ public abstract class SpringyMeshBase : MonoBehaviour
     public bool drawGizmos = true;
     public float mass;
     public Material mat;
-    
+
+    public float T;
+    public float P;
+    public float Ttheta;
+    public float Ptheta;
+
     protected List<Vertex> vertices;
     protected List<Strut> struts;
     protected List<Face> faces;
@@ -17,17 +22,17 @@ public abstract class SpringyMeshBase : MonoBehaviour
     protected MeshRenderer meshRenderer;
     protected MeshFilter meshFilter;
     protected Mesh mesh;
-    
+
     protected virtual void Render()
     {
         mesh.Clear();
-        
+
         // Update geometry
         List<Vector3> positions = new List<Vector3>();
         foreach (Vertex vertex in vertices) {
             positions.Add(vertex.Position);
         }
-        
+
         mesh.vertices = positions.ToArray();
         mesh.triangles = triangles.ToArray();
 
@@ -42,34 +47,42 @@ public abstract class SpringyMeshBase : MonoBehaviour
     {
         // User input
         float acceleration = 100.0f;
-        if(Input.GetKey(KeyCode.W)){
+        if (Input.GetKey(KeyCode.W)) {
             Debug.Log("W");
             for (int i = 0; i < vertices.Count; i++) {
-                vertices[i].AddForce(transform.InverseTransformVector(acceleration * Vector3.forward * vertices[i].mass));
+                vertices[i].AddForce(
+                    transform.InverseTransformVector(acceleration * Vector3.forward * vertices[i].mass));
             }
         }
-        if(Input.GetKey(KeyCode.S)){
+
+        if (Input.GetKey(KeyCode.S)) {
             Debug.Log("S");
             for (int i = 0; i < vertices.Count; i++) {
-                vertices[i].AddForce(transform.InverseTransformVector( - acceleration * Vector3.forward * vertices[i].mass));
+                vertices[i].AddForce(
+                    transform.InverseTransformVector(-acceleration * Vector3.forward * vertices[i].mass));
             }
         }
-        if(Input.GetKey(KeyCode.D)){
+
+        if (Input.GetKey(KeyCode.D)) {
             Debug.Log("D");
             for (int i = 0; i < vertices.Count; i++) {
                 vertices[i].AddForce(transform.InverseTransformVector(acceleration * Vector3.right * vertices[i].mass));
             }
         }
-        if(Input.GetKey(KeyCode.A)){
+
+        if (Input.GetKey(KeyCode.A)) {
             Debug.Log("A");
             for (int i = 0; i < vertices.Count; i++) {
-                vertices[i].AddForce(transform.InverseTransformVector(-acceleration * Vector3.right * vertices[i].mass));
+                vertices[i].AddForce(
+                    transform.InverseTransformVector(-acceleration * Vector3.right * vertices[i].mass));
             }
         }
-        if(Input.GetKey(KeyCode.Space)){
+
+        if (Input.GetKey(KeyCode.Space)) {
             Debug.Log("Space");
             for (int i = 0; i < vertices.Count; i++) {
-                vertices[i].AddForce(transform.InverseTransformVector(5.0f * acceleration * Vector3.up * vertices[i].mass));
+                vertices[i].AddForce(
+                    transform.InverseTransformVector(5.0f * acceleration * Vector3.up * vertices[i].mass));
             }
         }
     }
@@ -86,7 +99,8 @@ public abstract class SpringyMeshBase : MonoBehaviour
             float vertexMass = 0.0f;
             HashSet<int> n = neighbourFaces[i];
             foreach (int neiFaceIndex in n) {
-                vertexMass += (faces[neiFaceIndex].GetAngleByVertex(vertices[i]) / 180.0f) * (faces[neiFaceIndex].initialArea / totalArea) * mass;
+                vertexMass += (faces[neiFaceIndex].GetAngleByVertex(vertices[i]) / 180.0f) *
+                              (faces[neiFaceIndex].initialArea / totalArea) * mass;
             }
 
             vertices[i].mass = vertexMass;
@@ -104,28 +118,37 @@ public abstract class SpringyMeshBase : MonoBehaviour
                 float dist = Vector3.Distance(item.position, originalVertices[index]);
                 return dist < 0.01f;
             });
-            
+
             if (!isNodeClose) {
                 vertices.Add(new Vertex(originalVertices[index], mass));
                 vertexIndexHelper.Add(new VertexHelper(originalVertices[index], vertices.Count - 1));
             }
         }
-        
+
         // Setup vertices ids
         for (int i = 0; i < vertices.Count; i++) {
             vertices[i].id = i;
         }
-        
+
         Debug.Log("Vertex count: " + vertices.Count);
-        
+
         // Create struts
         List<EdgeHelper> springsInMesh = new List<EdgeHelper>();
         List<int> editedIndexCache = new List<int>();
         for (int triangleIndex = 0; triangleIndex < mesh.triangles.Length; triangleIndex += 3) {
-            int editedIndex0 = vertexIndexHelper[FindIndexOfClosestHelper(mesh.vertices[mesh.triangles[triangleIndex]], vertexIndexHelper)].editedIndex;
-            int editedIndex1 = vertexIndexHelper[FindIndexOfClosestHelper(mesh.vertices[mesh.triangles[triangleIndex + 1]], vertexIndexHelper)].editedIndex;
-            int editedIndex2 = vertexIndexHelper[FindIndexOfClosestHelper(mesh.vertices[mesh.triangles[triangleIndex + 2]], vertexIndexHelper)].editedIndex;
-            
+            int editedIndex0 =
+                vertexIndexHelper[
+                        FindIndexOfClosestHelper(mesh.vertices[mesh.triangles[triangleIndex]], vertexIndexHelper)]
+                    .editedIndex;
+            int editedIndex1 =
+                vertexIndexHelper[
+                        FindIndexOfClosestHelper(mesh.vertices[mesh.triangles[triangleIndex + 1]], vertexIndexHelper)]
+                    .editedIndex;
+            int editedIndex2 =
+                vertexIndexHelper[
+                        FindIndexOfClosestHelper(mesh.vertices[mesh.triangles[triangleIndex + 2]], vertexIndexHelper)]
+                    .editedIndex;
+
             editedIndexCache.Add(editedIndex0);
             editedIndexCache.Add(editedIndex1);
             editedIndexCache.Add(editedIndex2);
@@ -134,7 +157,7 @@ public abstract class SpringyMeshBase : MonoBehaviour
                 Debug.LogError("Two vertices in triangle are same.");
             }
         }
-        
+
         // Create triangles
         List<HashSet<int>> triangleHelpers = new List<HashSet<int>>();
         for (int i = 0; i < mesh.triangles.Length; i += 3) {
@@ -152,12 +175,12 @@ public abstract class SpringyMeshBase : MonoBehaviour
                 triangleHelpers.Add(tri);
             }
         }
-        
+
         List<HashSet<int>> neighbourFaces = new List<HashSet<int>>();
         for (int i = 0; i < vertices.Count; i++) {
             neighbourFaces.Add(new HashSet<int>());
         }
-        
+
         int strutId = 0;
         for (int i = 0; i < triangles.Count; i += 3) {
             int id1 = triangles[i];
@@ -188,7 +211,7 @@ public abstract class SpringyMeshBase : MonoBehaviour
                     s3 = strut;
                 }
             }
-            
+
             if (s1 == null) {
                 s1 = new Strut(strutId++, vertices[id1], vertices[id2]) {
                     face2 = face,
@@ -225,16 +248,16 @@ public abstract class SpringyMeshBase : MonoBehaviour
                 s3.opposite1 = vertices[id2];
             }
         }
-        
+
         // Setup masses based on angles and triangle areas
         SetupVerticesMassBasedOnAnglesAndAreas(neighbourFaces);
-        
+
         // Calculate average strut length
         float avgLength = GetAverageStrutLength();
-        
+
         // Preprocess struts
         for (int i = 0; i < struts.Count; i++) {
-            struts[i].Preprocess(avgLength);
+            struts[i].Preprocess(avgLength, T, P, Ttheta, Ptheta);
         }
     }
 
@@ -244,28 +267,28 @@ public abstract class SpringyMeshBase : MonoBehaviour
         triangles = new List<int>();
         struts = new List<Strut>();
         faces = new List<Face>();
-        
+
         InitMeshStuff();
         InitObject();
     }
-    
+
     protected virtual void Update()
     {
         Render();
     }
-    
+
     protected virtual void FixedUpdate()
     {
         // Loop over all of the particles, setting each particle’s force to the accumulation
         // of all external forces acting directly on each particle, such as air drag, friction,
         // or gravity
-        
+
         // Gravity
         for (int i = 0; i < vertices.Count; i++) {
             vertices[i].AddForce(transform.InverseTransformVector(Physics.gravity * vertices[i].mass));
         }
 
-        
+
         // Air drag
         // float dd = 0.1f;
         // for (int i = 0; i < vertices.Count; i++)
@@ -298,7 +321,7 @@ public abstract class SpringyMeshBase : MonoBehaviour
             vertices[i].Tick(Time.fixedDeltaTime, transform);
         }
     }
-    
+
     protected virtual void OnDrawGizmos()
     {
         if (vertices == null || drawGizmos == false) {
@@ -317,8 +340,8 @@ public abstract class SpringyMeshBase : MonoBehaviour
             Gizmos.DrawSphere(transform.TransformPoint(vertices[i].Position), 0.05f);
         }
     }
-    
-    
+
+
     protected struct VertexHelper
     {
         public Vector3 position;
@@ -330,7 +353,7 @@ public abstract class SpringyMeshBase : MonoBehaviour
             this.editedIndex = editedIndex;
         }
     }
-    
+
     protected struct EdgeHelper
     {
         public int from;
@@ -341,23 +364,23 @@ public abstract class SpringyMeshBase : MonoBehaviour
             this.from = f;
             this.to = t;
         }
-        
+
         public override bool Equals(object obj)
         {
             if (!(obj is EdgeHelper))
                 return false;
 
             EdgeHelper other = (EdgeHelper) obj;
-            
+
             return (this.from == other.from && this.to == other.to) || (this.from == other.to && this.to == other.from);
         }
-        
+
         public override int GetHashCode()
         {
             return this.from.GetHashCode() * 17 + this.to.GetHashCode();
         }
     }
-    
+
     protected int FindIndexOfClosestHelper(Vector3 pos, List<VertexHelper> vertexHelpers)
     {
         int index = -1;

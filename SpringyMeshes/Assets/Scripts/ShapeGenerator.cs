@@ -8,7 +8,8 @@ public static class ShapeGenerator
 {
     public enum ShapeType
     {
-        Cube, Tetrahedron
+        Cube,
+        Tetrahedron
     };
 
     public static class Cube
@@ -42,7 +43,7 @@ public static class ShapeGenerator
                     0, 1, 6 // f11
                 }.ToArray()
             };
-            
+
             mesh.Optimize();
             mesh.RecalculateNormals();
             mesh.RecalculateTangents();
@@ -68,10 +69,10 @@ public static class ShapeGenerator
                     0, 1, 2, // floor
                     0, 3, 1, // XY
                     0, 2, 3, // ZY
-                    1, 3, 2 
+                    1, 3, 2
                 }.ToArray()
             };
-            
+
             mesh.Optimize();
             mesh.RecalculateNormals();
             mesh.RecalculateTangents();
@@ -80,7 +81,6 @@ public static class ShapeGenerator
             return mesh;
         }
     }
-
 
 
     public static class IcoSphere
@@ -358,7 +358,7 @@ public static class ShapeGenerator
             List<Vector3> vertList = new List<Vector3>();
             Dictionary<long, int> middlePointIndexCache = new Dictionary<long, int>();
             int index = 0;
-            
+
 
             // create 12 vertices of a icosahedron
             float t = (1f + Mathf.Sqrt(5f)) / 2f;

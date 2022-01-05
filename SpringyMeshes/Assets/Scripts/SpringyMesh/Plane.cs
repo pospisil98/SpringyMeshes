@@ -17,7 +17,7 @@ public class Plane
     {
         return Vector3.Dot(pointPosition - position, normal);
     }
-    
+
     public float sphereDist(Vector3 spherePosition, float sphereRadius)
     {
         return Vector3.Dot(spherePosition - position, normal) - sphereRadius;
