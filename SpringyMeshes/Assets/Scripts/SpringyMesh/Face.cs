@@ -10,7 +10,7 @@ public class Face
     public float angle2;
     public float angle3;
 
-    public float area;
+    public float initialArea;
 
     public Vector3 normal;
 
@@ -21,12 +21,14 @@ public class Face
     public Face(int id, Vertex v1, Vertex v2, Vertex v3)
     {
         this.id = id;
+        
         this.v1 = v1;
         this.v2 = v2;
         this.v3 = v3;
+        
+        initialArea = AreaOfTriangle(v1.Position, v2.Position, v3.Position);
+        
         Update();
-
-        area = AreaOfTriangle(v1.Position, v2.Position, v3.Position);
     }
 
     public void Update()
@@ -44,7 +46,7 @@ public class Face
         if (v == v2) { return angle2; }
         if (v == v3) { return angle3; }
         
-        Debug.LogError("AJAJA");
+        Debug.LogError("Given vertex is not present in triangle.");
         return -1;
     }
 

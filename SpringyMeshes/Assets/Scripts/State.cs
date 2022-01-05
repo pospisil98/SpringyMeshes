@@ -47,7 +47,6 @@ public class State
         //position = newPosition;
         
         // Runge-Kutta
-
         Vector3 position1 = position;
         Vector3 velocity1 = velocity;
         Vector3 acceleration1 = acceleration;

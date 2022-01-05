@@ -6,6 +6,83 @@ using System.Collections;
 
 public static class ShapeGenerator
 {
+    public enum ShapeType
+    {
+        Cube, Tetrahedron
+    };
+
+    public static class Cube
+    {
+        public static Mesh Create(int size)
+        {
+            Mesh mesh = new Mesh {
+                name = "Cube",
+                vertices = new List<Vector3> {
+                    new Vector3(0, 0, 0),
+                    new Vector3(size, 0, 0),
+                    new Vector3(size, size, 0),
+                    new Vector3(0, size, 0),
+                    new Vector3(0, size, size),
+                    new Vector3(size, size, size),
+                    new Vector3(size, 0, size),
+                    new Vector3(0, 0, size),
+                }.ToArray(),
+                triangles = new List<int> {
+                    0, 2, 1, // f0
+                    0, 3, 2, // f1
+                    2, 3, 4, // f2
+                    2, 4, 5, // f3
+                    1, 2, 5, // f4
+                    1, 5, 6, // f5
+                    0, 7, 3, // f6 
+                    7, 4, 3, // f7
+                    6, 4, 7, // f8 
+                    5, 4, 6, // f9
+                    0, 6, 7, // f10 
+                    0, 1, 6 // f11
+                }.ToArray()
+            };
+            
+            mesh.Optimize();
+            mesh.RecalculateNormals();
+            mesh.RecalculateTangents();
+            mesh.RecalculateBounds();
+
+            return mesh;
+        }
+    }
+
+    public static class Tetrahedron
+    {
+        public static Mesh Create()
+        {
+            Mesh mesh = new Mesh {
+                name = "Tetrahedron",
+                vertices = new List<Vector3> {
+                    new Vector3(0, 0, 0),
+                    new Vector3(1, 0, 0),
+                    new Vector3(0, 0, 1),
+                    new Vector3(0, 1, 0)
+                }.ToArray(),
+                triangles = new List<int> {
+                    0, 1, 2, // floor
+                    0, 3, 1, // XY
+                    0, 2, 3, // ZY
+                    1, 3, 2 
+                }.ToArray()
+            };
+            
+            mesh.Optimize();
+            mesh.RecalculateNormals();
+            mesh.RecalculateTangents();
+            mesh.RecalculateBounds();
+
+            return mesh;
+        }
+    }
+
+
+
     public static class IcoSphere
     {
         public static Mesh Create(int n, float radius)
