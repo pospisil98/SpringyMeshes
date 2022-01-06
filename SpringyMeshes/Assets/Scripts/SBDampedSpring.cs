@@ -4,6 +4,8 @@ using UnityEngine;
 
 /// <summary>
 /// Older representation of SoftBody Spring - kept for legacy reasons
+///
+/// Strut is only represented by damped spring - no torsional springs for volume conservation.
 /// </summary>
 public class SBDampedSpring
 {
@@ -11,11 +13,9 @@ public class SBDampedSpring
 
     /// <summary> Strength constant </summary>
     private float k = 4.0f * (float) (Math.PI * Math.PI);
-    //private float k = 10.0f;
 
     /// <summary> Damping constant </summary>
     private float d = 0.8f * (float) Math.PI;
-    //private float d  = 0f;
 
     public SBNode start;
     public SBNode end;

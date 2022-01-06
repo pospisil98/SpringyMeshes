@@ -4,6 +4,8 @@ using UnityEngine;
 
 /// <summary>
 /// Older representation of SoftBody Mesh Model - kept for legacy reasons
+/// 
+/// Strut is only represented by damped spring - no torsional springs for volume conservation.
 /// </summary>
 public class SoftBodyModel : SoftBody
 {
