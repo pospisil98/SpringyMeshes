@@ -1,8 +1,8 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-
+/// <summary>
+/// Older representation of SoftBody Vertex - kept for legacy reasons
+/// </summary>
 public class SBNode
 {
     private const float eps = 0.01f;

@@ -1,10 +1,9 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
+/// <summary>
+/// Older representation of SoftBody Spring - kept for legacy reasons
+/// </summary>
 public class SBFace
 {
     private List<SBDampedSpring> springs;

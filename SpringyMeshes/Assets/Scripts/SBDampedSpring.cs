@@ -2,6 +2,9 @@ using System;
 using System.Net;
 using UnityEngine;
 
+/// <summary>
+/// Older representation of SoftBody Spring - kept for legacy reasons
+/// </summary>
 public class SBDampedSpring
 {
     private float restLength;

@@ -1,6 +1,8 @@
 using UnityEngine;
-using System.Collections;
- 
+
+/// <summary>
+/// Class with methods for drawing debug arrows in editor
+/// </summary>
 public static class DrawArrow
 {
     public static void ForGizmo(Vector3 pos, Vector3 direction, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20.0f)

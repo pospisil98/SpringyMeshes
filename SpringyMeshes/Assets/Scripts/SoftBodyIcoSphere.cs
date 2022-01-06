@@ -1,30 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-
+/// <summary>
+/// Older representation of SoftBody IcoSphere - kept for legacy reasons
+/// </summary>
 public class SoftBodyIcoSphere : SoftBody
 {
     public int subdivisions;
     public float radius;
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-    }
-
-    protected override void Start() { }
-
-    protected override void Update()
-    {
-        base.Update();
-    }
-
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
-    }
 
     protected override void InitObject()
     {
@@ -123,12 +107,5 @@ public class SoftBodyIcoSphere : SoftBody
             // dampedSprings.Add(new SBSDampedSpring(particles[i], particles[particles.Count - 1], 20f, 0.6f));
             dampedSprings.Add(new SBDampedSpring(particles[i], particles[particles.Count - 1], k, d));
         }
-    }
-
-    
-
-    protected override void OnDrawGizmos()
-    {
-        base.OnDrawGizmos();
     }
 }

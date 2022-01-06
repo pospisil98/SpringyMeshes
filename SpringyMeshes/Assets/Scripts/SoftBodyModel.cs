@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
+/// <summary>
+/// Older representation of SoftBody Mesh Model - kept for legacy reasons
+/// </summary>
 public class SoftBodyModel : SoftBody
 {
     public GameObject model;
@@ -66,10 +68,6 @@ public class SoftBodyModel : SoftBody
             if (editedIndex0 == editedIndex1 || editedIndex1 == editedIndex2 || editedIndex0 == editedIndex2) {
                 Debug.Log("Dva stejný cigáne");
             }
-
-            //Debug.Log("EditedIndex: " + editedIndex0 + "  GlobalIndex: " + mesh.triangles[triangleIndex] + "  Pos: " + mesh.vertices[mesh.triangles[triangleIndex]] + "Edited Pos:" + mesh.vertices[editedIndex0]);
-            //Debug.Log("EditedIndex: " + editedIndex1 + "  GlobalIndex: " + mesh.triangles[triangleIndex + 1] + "  Pos: " + mesh.vertices[mesh.triangles[triangleIndex + 1]] + "Edited Pos:" + mesh.vertices[editedIndex1]);
-            //Debug.Log("EditedIndex: " + editedIndex2 + "  GlobalIndex: " + mesh.triangles[triangleIndex + 2] + "  Pos: " + mesh.vertices[mesh.triangles[triangleIndex + 2]] + "Edited Pos:" + mesh.vertices[editedIndex2]);
 
             EdgeHelper edgeHelper = new EdgeHelper(editedIndex0, editedIndex1);
             if (!springsInMesh.Any(x => x.Equals(edgeHelper))) {

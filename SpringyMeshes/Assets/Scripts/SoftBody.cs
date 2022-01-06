@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Older representation of SoftBody Base Class - kept for legacy reasons
+/// </summary>
 public abstract class SoftBody : MonoBehaviour
 {
     public bool drawGizmos = false;

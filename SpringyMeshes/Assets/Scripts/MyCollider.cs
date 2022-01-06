@@ -1,10 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class responsible for creating "cascade" on which something falls on and through
+/// </summary>
 public class MyCollider : MonoBehaviour
 {
-    public bool drawGizmos = false;
+    /// <summary> Material of pads </summary>
     public Material mat;
 
     private MeshRenderer meshRenderer;
@@ -23,40 +25,7 @@ public class MyCollider : MonoBehaviour
         meshFilter = gameObject.AddComponent<MeshFilter>();
         mesh = meshFilter.mesh;
         
-        // one triangle
-        // vertices = new List<Vector3>
-        // {
-        //     new Vector3(0, 0, 0),
-        //     new Vector3(0, 0, 1),
-        //     new Vector3(1, 0, 0),
-        // };
-        // triangleIndices = new List<int>
-        // {
-        //     0, 1, 2,
-        // };
-        
-        // test
-        // vertices = new List<Vector3>
-        // {
-        //     new Vector3(-1, 0.5f, 0),
-        //     new Vector3(-1, 0.5f, 1),
-        //     new Vector3(0, 0, 0),
-        //     new Vector3(0, 0, 1),
-        //     new Vector3(1, 0, 0),
-        //     new Vector3(1, 0, 1),
-        //     new Vector3(2, -0.5f, 0),
-        //     new Vector3(2, -0.5f, 1),
-        // };
-        // triangleIndices = new List<int>
-        // {
-        //     0, 1, 2,
-        //     2, 1, 3,
-        //     4, 2, 3,
-        //     4, 3, 5,
-        //     6, 4, 5,
-        //     6, 5, 7,
-        // };
-
+        // Create cascade vertices
         float w = 16.0f;
         float h = 10.0f;
         float r = 5f;
@@ -93,6 +62,7 @@ public class MyCollider : MonoBehaviour
             new Vector3(100, -4 * h, -100),
             new Vector3(100, -4 * h, 100),
         };
+        
         triangleIndices = new List<int>
         {
             // rect 0
@@ -116,8 +86,6 @@ public class MyCollider : MonoBehaviour
             18, 17, 19,
         };
         
-        
-
         triangles = new List<Triangle>();
         for (int i = 0; i < triangleIndices.Count; i += 3)
         {
@@ -132,13 +100,16 @@ public class MyCollider : MonoBehaviour
     
     private void Update()
     {
+        // Only render meshes
         RenderBox();
     }
     
+    /// <summary>
+    /// Render dynamically created meshes
+    /// </summary>
     private void RenderBox()
     {
         mesh.Clear();
-
 
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangleIndices.ToArray();

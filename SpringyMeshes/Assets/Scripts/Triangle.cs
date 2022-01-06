@@ -1,30 +1,45 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Rendering.HybridV2;
 using UnityEngine;
 
+/// <summary>
+/// Triangle which is used in collisions with Soft Bodies
+/// </summary>
 public class Triangle
 {
-    public Vector3 a;
-    public Vector3 b;
-    public Vector3 c;
-    public Vector3 normal;
+    /// <summary> ID of triangle </summary>
     public int id;
+    
+    /// <summary> Position of first triangle vertex </summary>
+    public Vector3 a;
+    /// <summary> Position of second triangle vertex </summary>
+    public Vector3 b;
+    /// <summary> Position of third triangle vertex </summary>
+    public Vector3 c;
+    
+    /// <summary> Triangle normal vector</summary>
+    public Vector3 normal;
 
+    
+    /// <summary> EPSilon for usage in computations </summary>
+    const float eps = 0.01f;
+    
     public Triangle(Vector3 a, Vector3 b, Vector3 c, int id)
     {
+        this.id = id;
+        
         this.a = a;
         this.b = b;
         this.c = c;
+        
         this.normal = Vector3.Cross(b - a, c - a).normalized;
-        this.id = id;
     }
     
+    /// <summary>
+    /// Decide whether point lies in triangle or not
+    /// </summary>
+    /// <param name="p">Point to check</param>
+    /// <returns>True when triangle contains the point</returns>
     bool pointInTriangle(Vector3 p)
     {
-        float eps = 0.01f;
-        
         // Compute vectors        
         Vector3 v0 = c - a;
         Vector3 v1 = b - a;
@@ -47,6 +62,14 @@ public class Triangle
 
     }
 
+    /// <summary>
+    /// Do intersection of triangle with point.
+    /// </summary>
+    /// <param name="p"></param>
+    /// <param name="v"></param>
+    /// <param name="deltaTime"></param>
+    /// <param name="f"></param>
+    /// <returns></returns>
     public bool intersectPoint(Vector3 p, Vector3 v, float deltaTime, out float f)
     {
 
@@ -71,12 +94,22 @@ public class Triangle
         return false;
     }
     
+    /// <summary>
+    /// Compute distance of point from triangle
+    /// </summary>
+    /// <param name="pointPosition">Point position to measure distance to</param>
+    /// <returns>Distance of point from triangle</returns>
     public float pointDist(Vector3 pointPosition)
     {
-        // return Mathf.Abs(Vector3.Dot(pointPosition - a, normal));
         return (Vector3.Dot(pointPosition - a, normal));
     }
     
+    /// <summary>
+    /// Compute distance of sphere from triangle
+    /// </summary>
+    /// <param name="spherePosition">Sphere center position to measure distance to</param>
+    /// <param name="sphereRadius">Radius of the sphere</param>
+    /// <returns>Distance of sphere from triangle</returns>
     public float sphereDist(Vector3 spherePosition, float sphereRadius)
     {
         return Vector3.Dot(spherePosition - a, normal) - sphereRadius;

@@ -1,33 +1,11 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations;
-using Random = System.Random;
 
+/// <summary>
+/// Older representation of SoftBody Cube - kept for legacy reasons
+/// </summary>
 public class SoftBodyBox : SoftBody
 {
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-    }
-
-    protected override void Update()
-    {
-        base.Update();
-    }
-
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
-    }
-
     protected override void InitObject()
     {
         meshRenderer = gameObject.AddComponent<MeshRenderer>();
