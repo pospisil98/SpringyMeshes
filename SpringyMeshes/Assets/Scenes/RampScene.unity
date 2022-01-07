@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.88638735, g: 0.857019, b: 0.8637801, a: 1}
+  m_IndirectSpecularColor: {r: 0.88483906, g: 0.85543954, b: 0.8620794, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -153,13 +153,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawGizmos: 1
-  mass: 4
   mat: {fileID: 2100000, guid: 01b1140b019432642a2956262d976789, type: 2}
+  mass: 4
   T: 0.03
   P: 0.1
   Ttheta: 3
   Ptheta: 0.5
-  collider: {fileID: 1373354422}
+  fixedVerticesIndices: 
+  cascade: {fileID: 1373354422}
   subdivisions: 4
   radius: 3
 --- !u!4 &183577136
@@ -381,7 +382,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53de87212765edd43bf676f6b30690b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawGizmos: 0
   mat: {fileID: 2100000, guid: bd286d811410f4240841905b2c64dbda, type: 2}
 --- !u!4 &1373354423
 Transform:

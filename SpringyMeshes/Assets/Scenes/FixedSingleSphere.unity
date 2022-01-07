@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.88638735, g: 0.857019, b: 0.8637801, a: 1}
+  m_IndirectSpecularColor: {r: 0.88483906, g: 0.85543954, b: 0.8620794, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -153,12 +153,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawGizmos: 1
-  mass: 10
   mat: {fileID: 2100000, guid: 01b1140b019432642a2956262d976789, type: 2}
+  mass: 10
   T: 0.2
   P: 0.2
   Ttheta: 2
   Ptheta: 5
+  fixedVerticesIndices: 00000000
+  cascade: {fileID: 0}
   subdivisions: 4
   radius: 6
 --- !u!4 &183577136

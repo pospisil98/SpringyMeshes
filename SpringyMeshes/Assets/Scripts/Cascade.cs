@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Class responsible for creating "cascade" on which something falls on and through
 /// </summary>
-public class MyCollider : MonoBehaviour
+public class Cascade : MonoBehaviour
 {
     /// <summary> Material of pads </summary>
     public Material mat;

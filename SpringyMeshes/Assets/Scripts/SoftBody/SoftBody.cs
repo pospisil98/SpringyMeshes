@@ -49,9 +49,9 @@ public abstract class SoftBody : MonoBehaviour
         for (int i = 0; i < particles.Count; i++) {
             particles[i].AddForce(transform.InverseTransformVector(Physics.gravity * particles[i].Mass));
         }
-
-        float d = 1.0f;
+        
         // air drag
+        // float d = 1.0f;
         // for (int i = 0; i < particles.Count; i++)
         // {
         //     particles[i].AddForce(- d  * particles[i].Velocity);

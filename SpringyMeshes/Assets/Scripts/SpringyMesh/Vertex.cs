@@ -26,7 +26,7 @@ public class Vertex
     /// <summary> Plane reference for usage in collisions </summary>
     private Plane plane;
     /// <summary> Reference to MyCollider - representation of "cascade" for collisions </summary>
-    private MyCollider collider;
+    private Cascade collider;
 
     /// <summary> Flag for decision whether vertex should be simulated or not </summary>
     public bool isFixed = false;
@@ -51,7 +51,7 @@ public class Vertex
         this.plane = plane;
     }
 
-    public Vertex(Vector3 position, float mass, MyCollider collider)
+    public Vertex(Vector3 position, float mass, Cascade collider)
     {
         this.mass = mass;
         state = new State(Vector3.zero, position, Vector3.zero);
@@ -198,6 +198,7 @@ public class Vertex
     bool isResting(Transform transform)
     {
         return false;
+        
         if (state.velocity.magnitude < epsilon) {
             if (plane.sphereDist(transform.TransformPoint(state.position), 0.25f) < epsilon) {
                 if (Vector3.Dot(state.force, transform.InverseTransformDirection(plane.normal)) < epsilon) {

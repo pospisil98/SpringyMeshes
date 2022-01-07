@@ -33,7 +33,7 @@ public abstract class SpringyMeshBase : MonoBehaviour
     protected MeshFilter meshFilter;
     protected Mesh mesh;
     
-    public MyCollider collider;
+    public Cascade cascade;
 
     /// <summary>
     /// Renders Soft Body geometry from internal representation
@@ -116,7 +116,7 @@ public abstract class SpringyMeshBase : MonoBehaviour
     }
 
     /// <summary>
-    /// Distribute mass of object into vertices according on are of neighbour faces and angles incident with those faces
+    /// Distribute mass of object into vertices according on area of neighbour faces and angles incident with those faces
     /// </summary>
     /// <param name="neighbourFaces">List of hashsets of neighbour faces indices</param>
     protected void SetupVerticesMassBasedOnAnglesAndAreas(List<HashSet<int>> neighbourFaces)
@@ -134,7 +134,7 @@ public abstract class SpringyMeshBase : MonoBehaviour
             vertices[i].mass = vertexMass;
         }
     }
-
+    
     /// <summary>
     /// Initialize things connected with mesh initialization and generation
     /// </summary>
@@ -155,13 +155,13 @@ public abstract class SpringyMeshBase : MonoBehaviour
             });
 
             if (!isNodeClose) {
-                if (collider == null)
+                if (cascade == null)
                 {
                     vertices.Add(new Vertex(originalVertices[index], mass));
                 }
                 else
                 {
-                    vertices.Add(new Vertex(originalVertices[index], mass, collider));
+                    vertices.Add(new Vertex(originalVertices[index], mass, cascade));
                 }
                 vertexIndexHelper.Add(new VertexHelper(originalVertices[index], vertices.Count - 1));
             }
@@ -377,12 +377,9 @@ public abstract class SpringyMeshBase : MonoBehaviour
         // Loop over all of the particles, dividing the particle’s total applied force by its
         // mass to obtain its acceleration
         for (int i = 0; i < vertices.Count; i++) {
-            if (collider == null)
-            {
+            if (cascade == null) {
                 vertices[i].TickPlane(Time.fixedDeltaTime, transform);
-            }
-            else
-            {
+            } else {
                 vertices[i].TickCollider(Time.fixedDeltaTime, transform);
             }
         }

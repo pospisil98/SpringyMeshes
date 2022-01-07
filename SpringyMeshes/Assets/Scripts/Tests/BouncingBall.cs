@@ -24,7 +24,7 @@ public class BouncingBall : MonoBehaviour
     private Plane plane;
 
     public GameObject planeMesh;
-    [FormerlySerializedAs("collider")] [FormerlySerializedAs("box")] public MyCollider myCollider;
+    [FormerlySerializedAs("collider")] [FormerlySerializedAs("box")] public Cascade cascade;
 
     private const float epsilon = 0.01f;
 
@@ -65,7 +65,7 @@ public class BouncingBall : MonoBehaviour
     
     void FixedUpdate()
     {        
-        if (myCollider.triangles == null)
+        if (cascade.triangles == null)
         {
             Debug.Log("box null");
         }
@@ -91,10 +91,10 @@ public class BouncingBall : MonoBehaviour
         float min_f = float.PositiveInfinity;
         int triangleId = 0;
         bool collision = false;
-        for (int i = 0; i < myCollider.triangles.Count; i++)
+        for (int i = 0; i < cascade.triangles.Count; i++)
         {
             float f;
-            if (myCollider.triangles[i].intersectPoint(state.position, newState.velocity, deltaTime, out f))
+            if (cascade.triangles[i].intersectPoint(state.position, newState.velocity, deltaTime, out f))
             {
                 collision = true;
                 triangleId = i;
@@ -113,10 +113,10 @@ public class BouncingBall : MonoBehaviour
             newState.Integrate(acceleration, min_f);
                 
             // collision response
-            Vector3 v_n_minus = Vector3.Dot(newState.velocity, myCollider.triangles[triangleId].normal) * myCollider.triangles[triangleId].normal;
+            Vector3 v_n_minus = Vector3.Dot(newState.velocity, cascade.triangles[triangleId].normal) * cascade.triangles[triangleId].normal;
             Vector3 v_t_minus = newState.velocity - v_n_minus;
                 
-            Vector3 v_n_plus = -c_r * Vector3.Dot(newState.velocity, myCollider.triangles[triangleId].normal) * myCollider.triangles[triangleId].normal;
+            Vector3 v_n_plus = -c_r * Vector3.Dot(newState.velocity, cascade.triangles[triangleId].normal) * cascade.triangles[triangleId].normal;
             Vector3 v_t_plus = (1.0f - c_f) * v_t_minus;
                 
             newState.velocity = v_n_plus + v_t_plus;
@@ -188,19 +188,19 @@ public class BouncingBall : MonoBehaviour
             bool triangleIntersection = false;
             
             try {
-                for (int i = 0; i < myCollider.triangles.Count; i++)
+                for (int i = 0; i < cascade.triangles.Count; i++)
                 {
                     float f;
-                    if (myCollider.triangles[i].intersectPoint(state.position, state.velocity, deltaTime, out f))
+                    if (cascade.triangles[i].intersectPoint(state.position, state.velocity, deltaTime, out f))
                     {
                         triangleIntersection = true;
-                        tri = myCollider.triangles[i];
+                        tri = cascade.triangles[i];
                         break;
                     }
                 }
             }       
             catch (NullReferenceException ex) {
-                //Debug.Log("Box was not set in the inspector.");
+                Debug.Log("Box was not set in the inspector. " + ex.ToString());
             }
 
 

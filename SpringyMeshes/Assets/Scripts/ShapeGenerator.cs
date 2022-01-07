@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine;
-using System.Collections;
 
 /// <summary>
 /// Class providing Meshes for some basic shapes (Cube, Tetrahedron, IcoSphere)
@@ -370,8 +367,6 @@ public static class ShapeGenerator
             Vector3[] vertices = mesh.vertices;
             List<Vector3> vertList = new List<Vector3>();
             Dictionary<long, int> middlePointIndexCache = new Dictionary<long, int>();
-            int index = 0;
-
 
             // create 12 vertices of a icosahedron
             float t = (1f + Mathf.Sqrt(5f)) / 2f;

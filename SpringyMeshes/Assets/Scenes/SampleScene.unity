@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -152,8 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53de87212765edd43bf676f6b30690b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawGizmos: 0
-  mat: {fileID: -640421345888577198, guid: 86937f8ca66081140a165d9f562e69b0, type: 3}
+  mat: {fileID: 0}
 --- !u!4 &9222036
 Transform:
   m_ObjectHideFlags: 0
@@ -666,7 +665,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1169189276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -680,12 +679,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawGizmos: 1
-  mass: 10
   mat: {fileID: 2100000, guid: 4736c33de281dde4e8d165d74cd8605c, type: 2}
-  T: 0
-  P: 0
-  Ttheta: 0
-  Ptheta: 0
+  mass: 10
+  T: 0.1
+  P: 0.08
+  Ttheta: 2
+  Ptheta: 4
+  fixedVerticesIndices: 
+  cascade: {fileID: 0}
   model: {fileID: 2052330017}
 --- !u!4 &1169189277
 Transform:
@@ -717,7 +718,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1386564307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -731,12 +732,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawGizmos: 1
-  mass: 10
   mat: {fileID: 2100000, guid: 4736c33de281dde4e8d165d74cd8605c, type: 2}
-  T: 0
-  P: 0
-  Ttheta: 0
-  Ptheta: 0
+  mass: 10
+  T: 0.1
+  P: 0.08
+  Ttheta: 2
+  Ptheta: 6
+  fixedVerticesIndices: 
+  cascade: {fileID: 0}
   size: 4
   shapeType: 0
 --- !u!4 &1386564308
@@ -860,12 +863,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawGizmos: 1
-  mass: 10
   mat: {fileID: 2100000, guid: 5f8aadb8c7c267e45bb94bbb1a9a2e52, type: 2}
-  T: 0
-  P: 0
-  Ttheta: 0
-  Ptheta: 0
+  mass: 10
+  T: 0.1
+  P: 0.08
+  Ttheta: 2
+  Ptheta: 6
+  fixedVerticesIndices: 
+  cascade: {fileID: 0}
   subdivisions: 8
   radius: 4
 --- !u!4 &1561763628
@@ -1012,6 +1017,10 @@ PrefabInstance:
       propertyPath: c_r
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 4745278291715835813, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
+      propertyPath: cascade
+      value: 
+      objectReference: {fileID: 9222035}
     - target: {fileID: 4745278291715835813, guid: 7be14fc027fbed1498bfc48b41cf24e5, type: 3}
       propertyPath: planeMesh
       value: 
